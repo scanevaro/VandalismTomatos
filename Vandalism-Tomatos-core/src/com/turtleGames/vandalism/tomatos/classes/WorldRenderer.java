@@ -47,11 +47,11 @@ public class WorldRenderer {
 		orthoTargetsCam.update();
 		perspCam.update();
 
-		 renderBackground();
+		renderBackground();
 		renderFloor();
-		 renderTargets();
-		 renderProjectile();
-		 renderBushKid();
+		renderTargets();
+		renderProjectile();
+		renderBushKid();
 	}
 
 	private void renderBackground() {
@@ -66,9 +66,9 @@ public class WorldRenderer {
 
 	private void renderFloor() {
 		modelBatcher.begin(perspCam);
-		
+
 		modelBatcher.render(world.instances);
-		
+
 		modelBatcher.end();
 	}
 

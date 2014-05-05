@@ -1,5 +1,6 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.turtleGames.vandalism.tomatos.Tomatos;
@@ -16,10 +18,11 @@ import com.turtleGames.vandalism.tomatos.collections.Targets;
 import com.turtleGames.vandalism.tomatos.entities.Background;
 import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
+import com.turtleGames.vandalism.tomatos.entities.Target;
 
 public class World {
 
-	private enum WorldState {
+	public enum WorldState {
 		READY, RUNNING, GAME_OVER
 	}
 
@@ -31,16 +34,18 @@ public class World {
 
 	Tomatos game;
 
+	public WorldRenderer worldRenderer;
+
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
 	Model floorModel;
 	Background background;
-	Targets targets;
-	ImpactSetter impactSetter;
-	Projectile projectile;
+	public Targets targets;
+	public ImpactSetter impactSetter;
+	public Projectile projectile;
 
 	public final WorldListener listener;
 	Vector3 touchPoint;
-	int state;
+	public int state;
 
 	public World(Tomatos game, WorldListener listener) {
 		this.game = game;
@@ -52,8 +57,6 @@ public class World {
 		initiateTargets();
 		initiateImpactSetter();
 		initiateProjectile();
-
-		generateRound();
 
 		state = WorldState.READY.ordinal();
 	}
@@ -92,29 +95,76 @@ public class World {
 				Texture.class));
 	}
 
-	private void generateRound() {
-
-	}
-
 	public void update(float deltaTime) {
 		if (state == WorldState.READY.ordinal()) {
-			stateReady(deltaTime);
+			updateReady(deltaTime);
 		} else if (state == WorldState.RUNNING.ordinal()) {
-			stateRunning(deltaTime);
+			updateRunning(deltaTime);
 		} else if (state == WorldState.GAME_OVER.ordinal()) {
-			stateGameOver();
+			updateGameOver();
 		}
 	}
 
-	private void stateReady(float deltaTime) {
+	private void updateReady(float deltaTime) {
 
 	}
 
-	private void stateRunning(float deltaTime) {
-
+	private void updateRunning(float delta) {
+		updateCollisionSetter(delta);
+		updateProjectile(delta);
+		updateTargets(delta);
+		updateCamera();
+		checkCollitions();
 	}
 
-	private void stateGameOver() {
+	private void updateCollisionSetter(float delta) {
+		impactSetter.update(delta);
+	}
+
+	private void updateProjectile(float delta) {
+		projectile.update(delta);
+	}
+
+	private void updateTargets(float delta) {
+		targets.update(delta);
+	}
+
+	private void updateCamera() {
+		if (projectile.isUpdate()) {
+			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
+			worldRenderer.orthoTargetsCam.position.y += 0.5f;
+
+			worldRenderer.perspCam.position.x += 0.5f;
+		} else if (projectile.stateTime >= 0) {
+			worldRenderer.orthoTargetsCam.zoom += 0.01f;
+			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
+
+			worldRenderer.perspCam.position.x -= 0.5f;
+		} else {
+			worldRenderer.orthoTargetsCam.zoom = 1;
+			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
+
+			worldRenderer.perspCam.position.x = -60;
+		}
+	}
+
+	private void checkCollitions() {
+		if (impactSetter.isShooting() && projectile.stateTime >= 0.5f) {
+			for (int i = 0; i < targets.targets.size; i++) {
+				Target target = targets.targets.get(i);
+				if (target.spacePos.z <= projectile.spacePos.z + 8
+						&& target.spacePos.z >= projectile.spacePos.z - 8)
+					if (Intersector.overlaps(projectile.bounds, target.bounds))
+						if (target.spacePos.z <= projectile.spacePos.z + 32
+								&& target.spacePos.z >= projectile.spacePos.z - 32) {
+							targets.targets.removeIndex(i);
+							projectile.setUpdate(false);
+						}
+			}
+		}
+	}
+
+	private void updateGameOver() {
 
 	}
 

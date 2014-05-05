@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.classes.World;
 import com.turtleGames.vandalism.tomatos.classes.World.WorldListener;
+import com.turtleGames.vandalism.tomatos.classes.World.WorldState;
 import com.turtleGames.vandalism.tomatos.classes.WorldRenderer;
 
 public class GameScreen implements Screen {
@@ -57,6 +58,7 @@ public class GameScreen implements Screen {
 		};
 		world = new World(game, worldListener);
 		worldRenderer = new WorldRenderer(spriteBatcher, modelBatcher, world);
+		world.worldRenderer = worldRenderer;
 
 		state = GameState.READY.ordinal();
 
@@ -76,11 +78,6 @@ public class GameScreen implements Screen {
 		// if (deltaTime > 0.1f)
 		// deltaTime = 0.1f;
 
-		// if (Gdx.input.justTouched()) {
-		// guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),
-		// 0));
-		// }
-
 		if (state == GameState.READY.ordinal()) {
 			updateReady(delta);
 		} else if (state == GameState.RUNNING.ordinal()) {
@@ -93,11 +90,37 @@ public class GameScreen implements Screen {
 	}
 
 	private void updateReady(float delta) {
-
+		if (Gdx.input.justTouched()) {
+			// guiCam.unproject(touchPoint.set(Gdx.input.getX(),
+			// Gdx.input.getY(),
+			// 0));
+			state = GameState.RUNNING.ordinal();
+			world.state = WorldState.RUNNING.ordinal();
+		}
 	}
 
 	private void updateRunning(float delta) {
+		if (Gdx.input.justTouched()) {
+			if (!world.projectile.isUpdate())
+				world.impactSetter.setShooting(false);
 
+			if (!world.impactSetter.isActivate()
+					&& !world.impactSetter.isShooting())
+				world.impactSetter.setActivate(true);
+			else if (!world.impactSetter.isShooting()) {
+				world.impactSetter.setShooting(true);
+				world.projectile.setImpactSpot(world.impactSetter.position.set(
+						Gdx.graphics.getWidth() / 2
+								- world.impactSetter.position.x,
+						Gdx.graphics.getHeight() / 2
+								- world.impactSetter.position.y,
+						Gdx.graphics.getHeight() / 2
+								- world.impactSetter.position.z));
+				world.projectile.setUpdate(true);
+				world.projectile.prepare();
+				world.impactSetter.setActivate(false);
+			}
+		}
 	}
 
 	private void updateGameOver(float delta) {
