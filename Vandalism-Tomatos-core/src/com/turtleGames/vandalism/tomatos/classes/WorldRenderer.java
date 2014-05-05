@@ -49,6 +49,7 @@ public class WorldRenderer {
 
 		renderBackground();
 		renderFloor();
+		renderCollitionSetter();
 		renderTargets();
 		renderProjectile();
 		renderBushKid();
@@ -72,6 +73,10 @@ public class WorldRenderer {
 		modelBatcher.end();
 	}
 
+	private void renderCollitionSetter() {
+		world.impactSetter.draw();
+	}
+
 	private void renderTargets() {
 		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
 		spriteBatcher.enableBlending();
@@ -81,7 +86,7 @@ public class WorldRenderer {
 	}
 
 	private void renderProjectile() {
-		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
+		spriteBatcher.setProjectionMatrix(orthoBackgroundCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
 		world.projectile.draw(spriteBatcher);
