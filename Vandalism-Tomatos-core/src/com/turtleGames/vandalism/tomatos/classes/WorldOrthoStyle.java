@@ -1,18 +1,9 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.collections.Targets;
 import com.turtleGames.vandalism.tomatos.entities.Background;
@@ -20,24 +11,24 @@ import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
 import com.turtleGames.vandalism.tomatos.entities.Target;
 
-public class World {
+public class WorldOrthoStyle {
 
-	public enum WorldState {
-		READY, RUNNING, GAME_OVER
-	}
+	public final static int READY = 0;
+	public final static int RUNNING = 1;
+	public final static int GAME_OVER = 2;
 
 	public interface WorldListener {
 		public void hitTarget();
 
 		public void hitGround();
+
+		public void throwTomato();
 	}
 
 	Tomatos game;
 
-	public WorldRenderer worldRenderer;
+	public WorldRendererOrthoStyle worldRenderer;
 
-	public Array<ModelInstance> instances = new Array<ModelInstance>();
-	Model floorModel;
 	Background background;
 	public Targets targets;
 	public ImpactSetter impactSetter;
@@ -47,43 +38,26 @@ public class World {
 	Vector3 touchPoint;
 	public int state;
 
-	public World(Tomatos game, WorldListener listener) {
+	public WorldOrthoStyle(Tomatos game, WorldListener listener) {
 		this.game = game;
 		this.listener = listener;
 		this.touchPoint = new Vector3();
 
 		initiateBackground();
-		initiateFloorModel();
 		initiateTargets();
 		initiateImpactSetter();
 		initiateProjectile();
 
-		state = WorldState.READY.ordinal();
+		state = READY;
 	}
 
 	private void initiateBackground() {
-		background = new Background(0, 30,
-				(Texture) game.assets.get("data/springGrass.png"));
-	}
-
-	private void initiateFloorModel() {
-		ModelBuilder builder = new ModelBuilder();
-		builder.begin();
-		MeshPartBuilder part = builder.part("floor", GL20.GL_TRIANGLES,
-				Usage.Position | Usage.TextureCoordinates | Usage.Normal,
-				new Material());
-		part.rect(-100, 0, -200, -100, 0, 200, 100, 0, 200, 100, 0, -200, 0, 1,
-				0);
-		floorModel = builder.end();
-
-		floorModel.materials.get(0).set(
-				TextureAttribute.createDiffuse(game.assets.get(
-						"data/grassStripe.png", Texture.class)));
-		instances.add(new ModelInstance(floorModel));
+		background = new Background(0, 0,
+				(Texture) game.assetManager.get("data/background.png"));
 	}
 
 	private void initiateTargets() {
-		targets = new Targets(7, (Texture) game.assets.get("data/kid50.png"));
+		targets = new Targets(7, (Texture) game.assetManager.get("data/kid50.png"));
 	}
 
 	private void initiateImpactSetter() {
@@ -91,17 +65,22 @@ public class World {
 	}
 
 	private void initiateProjectile() {
-		projectile = new Projectile(game.assets.get("data/projectile.png",
+		projectile = new Projectile(game.assetManager.get("data/projectile.png",
 				Texture.class));
 	}
 
 	public void update(float deltaTime) {
-		if (state == WorldState.READY.ordinal()) {
-			updateReady(deltaTime);
-		} else if (state == WorldState.RUNNING.ordinal()) {
-			updateRunning(deltaTime);
-		} else if (state == WorldState.GAME_OVER.ordinal()) {
-			updateGameOver();
+
+		switch (state) {
+			case READY:
+				updateReady(deltaTime);
+				break;
+			case RUNNING:
+				updateRunning(deltaTime);
+				break;
+			case GAME_OVER:
+				updateGameOver();
+				break;
 		}
 	}
 
@@ -110,14 +89,14 @@ public class World {
 	}
 
 	private void updateRunning(float delta) {
-		updateCollisionSetter(delta);
+		updateImpactSetter(delta);
 		updateProjectile(delta);
 		updateTargets(delta);
 		updateCamera();
 		checkCollitions();
 	}
 
-	private void updateCollisionSetter(float delta) {
+	private void updateImpactSetter(float delta) {
 		impactSetter.update(delta);
 	}
 
@@ -133,18 +112,12 @@ public class World {
 		if (projectile.isUpdate()) {
 			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
 			worldRenderer.orthoTargetsCam.position.y += 0.5f;
-
-			worldRenderer.perspCam.position.x += 0.5f;
 		} else if (projectile.stateTime >= 0) {
 			worldRenderer.orthoTargetsCam.zoom += 0.01f;
 			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
-
-			worldRenderer.perspCam.position.x -= 0.5f;
 		} else {
 			worldRenderer.orthoTargetsCam.zoom = 1;
 			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
-
-			worldRenderer.perspCam.position.x = -60;
 		}
 	}
 
@@ -170,6 +143,5 @@ public class World {
 
 	public void dispose() {
 		impactSetter.dispose();
-		floorModel.dispose();
 	}
 }

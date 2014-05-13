@@ -3,15 +3,20 @@ package com.turtleGames.vandalism.tomatos;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.turtleGames.vandalism.tomatos.classes.Assets;
 import com.turtleGames.vandalism.tomatos.screens.LoadingScreen;
 
 public class Tomatos extends Game {
 
 	public static FPSLogger fps;
-	public AssetManager assets;
+	public AssetManager assetManager;
+	public Assets assets;
 
 	@Override
 	public void create() {
+		assetManager = new AssetManager();
+		assets = new Assets();
+
 		setScreen(new LoadingScreen(this));
 
 		fps = new FPSLogger();

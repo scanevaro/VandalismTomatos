@@ -10,12 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.turtleGames.vandalism.tomatos.Tomatos;
-import com.turtleGames.vandalism.tomatos.classes.World;
-import com.turtleGames.vandalism.tomatos.classes.World.WorldListener;
-import com.turtleGames.vandalism.tomatos.classes.World.WorldState;
-import com.turtleGames.vandalism.tomatos.classes.WorldRenderer;
+import com.turtleGames.vandalism.tomatos.classes.WorldOrthoStyle;
+import com.turtleGames.vandalism.tomatos.classes.WorldRendererOrthoStyle;
 
-public class GameScreen implements Screen {
+public class GameScreenOrthoStyle implements Screen {
 
 	private enum GameState {
 		READY, RUNNING, GAME_OVER
@@ -27,13 +25,13 @@ public class GameScreen implements Screen {
 	OrthographicCamera guiCam;
 	SpriteBatch spriteBatcher;
 	ModelBatch modelBatcher;
-	World world;
-	WorldListener worldListener;
-	WorldRenderer worldRenderer;
+	WorldOrthoStyle world;
+	WorldOrthoStyle.WorldListener worldListener;
+	WorldRendererOrthoStyle worldRenderer;
 
 	BitmapFont font;
 
-	public GameScreen(Tomatos game) {
+	public GameScreenOrthoStyle(Tomatos game) {
 		this.game = game;
 
 		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(),
@@ -44,7 +42,7 @@ public class GameScreen implements Screen {
 		spriteBatcher = new SpriteBatch();
 		modelBatcher = new ModelBatch();
 
-		worldListener = new WorldListener() {
+		worldListener = new WorldOrthoStyle.WorldListener() {
 
 			@Override
 			public void hitTarget() {
@@ -55,9 +53,16 @@ public class GameScreen implements Screen {
 			public void hitGround() {
 				// TODO Auto-generated method stub
 			}
+
+			@Override
+			public void throwTomato() {
+				// TODO Auto-generated method stub
+
+			}
 		};
-		world = new World(game, worldListener);
-		worldRenderer = new WorldRenderer(spriteBatcher, modelBatcher, world);
+		world = new WorldOrthoStyle(game, worldListener);
+		worldRenderer = new WorldRendererOrthoStyle(spriteBatcher,
+				modelBatcher, world);
 		world.worldRenderer = worldRenderer;
 
 		state = GameState.READY.ordinal();
@@ -95,7 +100,7 @@ public class GameScreen implements Screen {
 			// Gdx.input.getY(),
 			// 0));
 			state = GameState.RUNNING.ordinal();
-			world.state = WorldState.RUNNING.ordinal();
+			world.state = WorldOrthoStyle.RUNNING;
 		}
 	}
 

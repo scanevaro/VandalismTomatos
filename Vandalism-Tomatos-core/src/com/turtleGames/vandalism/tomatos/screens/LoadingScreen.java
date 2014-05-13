@@ -2,11 +2,11 @@ package com.turtleGames.vandalism.tomatos.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -34,23 +34,21 @@ public class LoadingScreen implements Screen {
 	public LoadingScreen(Tomatos game) {
 		this.game = game;
 
-		game.assets = new AssetManager();
-
 		// Settings.load();
 	}
 
 	@Override
 	public void show() {
 		// Tell the manager to load assets for the loading screen
-		game.assets.load("data/loading.pack", TextureAtlas.class);
+		game.assetManager.load("data/loading.pack", TextureAtlas.class);
 		// Wait until they are finished loading
-		game.assets.finishLoading();
+		game.assetManager.finishLoading();
 
 		// Initialize the stage where we will place everything
 		stage = new Stage();
 
 		// Get our textureatlas from the manager
-		TextureAtlas atlas = game.assets.get("data/loading.pack",
+		TextureAtlas atlas = game.assetManager.get("data/loading.pack",
 				TextureAtlas.class);
 
 		// Grab the regions from the atlas and create some images
@@ -78,11 +76,28 @@ public class LoadingScreen implements Screen {
 		stage.addActor(logo);
 
 		// Add everything to be loaded, for instance:
-		game.assets.load("data/springGrass.png", Texture.class);
-		game.assets.load("data/grassStripe.png", Texture.class);
-		game.assets.load("data/grassBackground.png", Texture.class);
-		game.assets.load("data/kid50.png", Texture.class);
-		game.assets.load("data/projectile.png", Texture.class);
+		game.assetManager.load("data/springGrass.png", Texture.class);
+		game.assetManager.load("data/grassStripe.png", Texture.class);
+		game.assetManager.load("data/grassBackground.png", Texture.class);
+		game.assetManager.load("data/kid50.png", Texture.class);
+		game.assetManager.load("data/projectile.png", Texture.class);
+		game.assetManager.load("data/kid6464.png", Texture.class);
+		game.assetManager.load("data/background.png", Texture.class);
+		game.assetManager.load("data/bush.png", Texture.class);
+		game.assetManager.load("data/targetAnimation.pack", TextureAtlas.class);
+
+		game.assetManager.finishLoading();
+
+		TextureAtlas targetAnimAtlas = game.assetManager.get(
+				"data/targetAnimation.pack", TextureAtlas.class);
+
+		game.assets.targetAnimation = new Animation(0.5f,
+				(TextureRegion) targetAnimAtlas.findRegion("target1"),
+				(TextureRegion) targetAnimAtlas.findRegion("target2"),
+				(TextureRegion) targetAnimAtlas.findRegion("target3"),
+				(TextureRegion) targetAnimAtlas.findRegion("target4"),
+				(TextureRegion) targetAnimAtlas.findRegion("target3"),
+				(TextureRegion) targetAnimAtlas.findRegion("target2"));
 	}
 
 	@Override
@@ -128,19 +143,19 @@ public class LoadingScreen implements Screen {
 		// Clear the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (game.assets.update()) { // Load some, will return true if done
-									// loading
-									// if (Gdx.input.isTouched()) { // If the
-									// screen is touched after the
+		if (game.assetManager.update()) { // Load some, will return true if done
+			// loading
+			// if (Gdx.input.isTouched()) { // If the
+			// screen is touched after the
 			// game is done loading, go to the
 			// main menu screen
-			game.setScreen(new GameScreen(game));
+			game.setScreen(new GameScreenOrthoStyle(game));
 			// }
 		}
 
 		// Interpolate the percentage to make it more smooth
 		percent = Interpolation.linear.apply(percent,
-				game.assets.getProgress(), 0.1f);
+				game.assetManager.getProgress(), 0.1f);
 
 		// Update positions (and size) to match the percentage
 		loadingBarHidden.setX(startX + endX * percent);
@@ -156,7 +171,7 @@ public class LoadingScreen implements Screen {
 	@Override
 	public void hide() {
 		// Dispose the loading assets as we no longer need them
-		game.assets.unload("data/loading.pack");
+		game.assetManager.unload("data/loading.pack");
 	}
 
 	@Override
