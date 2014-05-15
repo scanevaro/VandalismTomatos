@@ -5,8 +5,12 @@ import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
 
 public class Target extends Dynamic3DGameObject {
 
+	public float stateTime;
+
 	public Target(float x, float y, float width, float height) {
 		super(x, y, width, height);
+
+		stateTime = 0;
 
 		setZ();
 
@@ -35,5 +39,7 @@ public class Target extends Dynamic3DGameObject {
 		spacePos.add(velocity.x * delta, 0, 0);
 		bounds.set(spacePos.x - width / 2, spacePos.y - height / 2, width,
 				height);
+
+		stateTime += delta;
 	}
 }

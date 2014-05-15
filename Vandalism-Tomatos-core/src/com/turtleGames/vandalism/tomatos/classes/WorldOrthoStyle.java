@@ -57,7 +57,7 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateTargets() {
-		targets = new Targets(7, (Texture) game.assetManager.get("data/kid50.png"));
+		targets = new Targets(7, game.assets.targetAnimation);
 	}
 
 	private void initiateImpactSetter() {
@@ -65,8 +65,8 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateProjectile() {
-		projectile = new Projectile(game.assetManager.get("data/projectile.png",
-				Texture.class));
+		projectile = new Projectile(game.assetManager.get(
+				"data/projectile.png", Texture.class));
 	}
 
 	public void update(float deltaTime) {

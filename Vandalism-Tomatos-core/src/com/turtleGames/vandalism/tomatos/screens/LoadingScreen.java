@@ -91,7 +91,7 @@ public class LoadingScreen implements Screen {
 		TextureAtlas targetAnimAtlas = game.assetManager.get(
 				"data/targetAnimation.pack", TextureAtlas.class);
 
-		game.assets.targetAnimation = new Animation(0.5f,
+		game.assets.targetAnimation = new Animation(0.25f,
 				(TextureRegion) targetAnimAtlas.findRegion("target1"),
 				(TextureRegion) targetAnimAtlas.findRegion("target2"),
 				(TextureRegion) targetAnimAtlas.findRegion("target3"),

@@ -2,7 +2,7 @@ package com.turtleGames.vandalism.tomatos.collections;
 
 import java.util.Random;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.turtleGames.vandalism.tomatos.entities.Target;
@@ -10,11 +10,11 @@ import com.turtleGames.vandalism.tomatos.entities.Target;
 public class Targets {
 
 	public Array<Target> targets;
-	Texture texture;
+	Animation animation;
 
-	public Targets(int howMany, Texture texture) {
+	public Targets(int howMany, Animation animation) {
 
-		this.texture = texture;
+		this.animation = animation;
 		targets = new Array<Target>();
 		float x = 0, y = 0;
 		Random rand = new Random();
@@ -28,16 +28,18 @@ public class Targets {
 
 			y = rand.nextFloat() * 250;
 
-			Target target = new Target(x, y, texture.getWidth(),
-					texture.getHeight());
+			Target target = new Target(x, y, animation.getKeyFrame(0)
+					.getRegionWidth(), animation.getKeyFrame(0)
+					.getRegionHeight());
 			targets.add(target);
 		}
 	}
 
 	public void render(SpriteBatch batcher) {
 		for (Target target : targets) {
-			batcher.draw(texture, target.spacePos.x, target.spacePos.y,
-					target.dimensions.x, target.dimensions.y);
+			batcher.draw(animation.getKeyFrame(target.stateTime, true),
+					target.spacePos.x, target.spacePos.y, target.dimensions.x,
+					target.dimensions.y);
 		}
 	}
 

@@ -31,6 +31,7 @@ public class GameScreenOrthoStyle implements Screen {
 
 	BitmapFont font;
 
+	@SuppressWarnings("deprecation")
 	public GameScreenOrthoStyle(Tomatos game) {
 		this.game = game;
 

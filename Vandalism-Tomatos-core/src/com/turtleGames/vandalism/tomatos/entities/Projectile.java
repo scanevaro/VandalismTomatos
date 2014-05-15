@@ -44,8 +44,24 @@ public class Projectile extends Dynamic3DGameObject {
 			spacePos.y = (float) (-0.5 * gravity * stateTime * stateTime
 					+ velocity.y * stateTime + 0);
 
-			bounds.set(spacePos.x - texture.getWidth() / 2, spacePos.y
-					- texture.getHeight() / 2, texture.getWidth());
+			bounds.set(spacePos.x - dimensions.x / 2, spacePos.y - dimensions.y
+					/ 2, dimensions.x);
+
+			if (spacePos.y < 150)
+				dimensions.set(width, height);
+			else if (spacePos.y > 150 && spacePos.y < 250) {
+				width = width / 2;
+				height = height / 2;
+				dimensions.set(width, height);
+			} else if (spacePos.y > 250 && spacePos.y < 350) {
+				width = width / 3;
+				height = height / 3;
+				dimensions.set(width, height);
+			} else {
+				width = width / 4;
+				height = height / 4;
+				dimensions.set(width, height);
+			}
 
 			if (stateTime > flyghtTime)
 				setUpdate(false);
