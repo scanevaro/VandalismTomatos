@@ -1,13 +1,16 @@
 package com.turtleGames.vandalism.tomatos.entities;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
 import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
 
 public class Target extends Dynamic3DGameObject {
 
 	public float stateTime;
+	private Animation animation;
 
-	public Target(float x, float y, float width, float height) {
+	public Target(float x, float y, float width, float height,
+			Animation animation) {
 		super(x, y, width, height);
 
 		stateTime = 0;
@@ -15,6 +18,8 @@ public class Target extends Dynamic3DGameObject {
 		setZ();
 
 		bounds = new Rectangle(x - width / 2, y - height / 2, width, height);
+
+		this.setAnimation(animation);
 	}
 
 	private void setZ() {
@@ -41,5 +46,13 @@ public class Target extends Dynamic3DGameObject {
 				height);
 
 		stateTime += delta;
+	}
+
+	public Animation getAnimation() {
+		return animation;
+	}
+
+	public void setAnimation(Animation animation) {
+		this.animation = animation;
 	}
 }

@@ -20,7 +20,7 @@ public class ImpactSetter {
 
 	public void update(float delta) {
 		if (activate) {
-			position.add(-delta * 4 * 20, -delta * 8 * 20, -delta * 5.6f * 20);
+			position.add(-delta * 4 * 25, -delta * 8 * 25, -delta * 6 * 25);
 
 			if (position.y < -80)
 				activate = false;
@@ -53,7 +53,7 @@ public class ImpactSetter {
 	public void setActivate(boolean activate) {
 		this.activate = activate;
 
-		position.set(90, 110, 60);
+		position.set(100, 120, 70);
 	}
 
 	public boolean isActivate() {

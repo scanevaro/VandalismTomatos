@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.turtleGames.vandalism.tomatos.entities.Target;
 
 public class WorldRendererOrthoStyle {
 
@@ -61,7 +62,12 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		world.targets.render(spriteBatcher);
+		for (Target target : world.targets) {
+			spriteBatcher.draw(
+					target.getAnimation().getKeyFrame(target.stateTime, true),
+					target.spacePos.x, target.spacePos.y, target.dimensions.x,
+					target.dimensions.y);
+		}
 		spriteBatcher.end();
 	}
 
@@ -77,9 +83,11 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		spriteBatcher.draw((Texture) world.game.assetManager.get("data/bush.png"), 0,
-				0, Gdx.graphics.getWidth(), 300);
-		spriteBatcher.draw((Texture) world.game.assetManager.get("data/kid6464.png"),
+		spriteBatcher.draw(
+				(Texture) world.game.assetManager.get("data/bush.png"), 0, 0,
+				Gdx.graphics.getWidth(), 300);
+		spriteBatcher.draw(
+				(Texture) world.game.assetManager.get("data/kid6464.png"),
 				Gdx.graphics.getWidth() / 2 - 25, 0, 64, 64);
 		spriteBatcher.end();
 	}

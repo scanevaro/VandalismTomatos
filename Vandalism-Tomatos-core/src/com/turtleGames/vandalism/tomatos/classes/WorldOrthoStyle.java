@@ -1,11 +1,13 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.turtleGames.vandalism.tomatos.Tomatos;
-import com.turtleGames.vandalism.tomatos.collections.Targets;
 import com.turtleGames.vandalism.tomatos.entities.Background;
 import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
@@ -30,7 +32,7 @@ public class WorldOrthoStyle {
 	public WorldRendererOrthoStyle worldRenderer;
 
 	Background background;
-	public Targets targets;
+	public Target target;
 	public ImpactSetter impactSetter;
 	public Projectile projectile;
 
@@ -38,13 +40,16 @@ public class WorldOrthoStyle {
 	Vector3 touchPoint;
 	public int state;
 
+	Array<Target> targets;
+
 	public WorldOrthoStyle(Tomatos game, WorldListener listener) {
 		this.game = game;
 		this.listener = listener;
 		this.touchPoint = new Vector3();
 
 		initiateBackground();
-		initiateTargets();
+		initiateTargetsArray();
+		initiateTarget();
 		initiateImpactSetter();
 		initiateProjectile();
 
@@ -56,8 +61,26 @@ public class WorldOrthoStyle {
 				(Texture) game.assetManager.get("data/background.png"));
 	}
 
-	private void initiateTargets() {
-		targets = new Targets(7, game.assets.targetAnimation);
+	private void initiateTargetsArray() {
+		targets = new Array<Target>();
+	}
+
+	private void initiateTarget() {
+		float x, y;
+
+		Random rand = new Random();
+		if (rand.nextFloat() > 0.5f)
+			x = 640;
+		else
+			x = 0;
+
+		y = rand.nextFloat() * 250;
+
+		target = new Target(x, y, game.assets.targetAnimation.getKeyFrame(0)
+				.getRegionWidth(), game.assets.targetAnimation.getKeyFrame(0)
+				.getRegionHeight(), game.assets.targetAnimation);
+
+		targets.add(target);
 	}
 
 	private void initiateImpactSetter() {
@@ -94,6 +117,7 @@ public class WorldOrthoStyle {
 		updateTargets(delta);
 		updateCamera();
 		checkCollitions();
+		checkTargets();
 	}
 
 	private void updateImpactSetter(float delta) {
@@ -105,7 +129,7 @@ public class WorldOrthoStyle {
 	}
 
 	private void updateTargets(float delta) {
-		targets.update(delta);
+		target.update(delta);
 	}
 
 	private void updateCamera() {
@@ -123,17 +147,23 @@ public class WorldOrthoStyle {
 
 	private void checkCollitions() {
 		if (impactSetter.isShooting() && projectile.stateTime >= 0.5f) {
-			for (int i = 0; i < targets.targets.size; i++) {
-				Target target = targets.targets.get(i);
+			for (int i = 0; i < targets.size; i++) {
+				Target target = targets.get(i);
 				if (target.spacePos.z <= projectile.spacePos.z + 8
 						&& target.spacePos.z >= projectile.spacePos.z - 8)
 					if (Intersector.overlaps(projectile.bounds, target.bounds))
 						if (target.spacePos.z <= projectile.spacePos.z + 32
 								&& target.spacePos.z >= projectile.spacePos.z - 32) {
-							targets.targets.removeIndex(i);
+							targets.removeIndex(i);
 							projectile.setUpdate(false);
 						}
 			}
+		}
+	}
+
+	private void checkTargets() {
+		if (targets.size == 0) {
+			initiateTarget();
 		}
 	}
 

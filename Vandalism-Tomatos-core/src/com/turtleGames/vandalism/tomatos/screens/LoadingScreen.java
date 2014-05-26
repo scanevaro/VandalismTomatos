@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -92,12 +91,7 @@ public class LoadingScreen implements Screen {
 				"data/targetAnimation.pack", TextureAtlas.class);
 
 		game.assets.targetAnimation = new Animation(0.25f,
-				(TextureRegion) targetAnimAtlas.findRegion("target1"),
-				(TextureRegion) targetAnimAtlas.findRegion("target2"),
-				(TextureRegion) targetAnimAtlas.findRegion("target3"),
-				(TextureRegion) targetAnimAtlas.findRegion("target4"),
-				(TextureRegion) targetAnimAtlas.findRegion("target3"),
-				(TextureRegion) targetAnimAtlas.findRegion("target2"));
+				targetAnimAtlas.getRegions());
 	}
 
 	@Override
