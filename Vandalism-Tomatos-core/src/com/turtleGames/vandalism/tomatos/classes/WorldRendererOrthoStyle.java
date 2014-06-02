@@ -85,7 +85,7 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.begin();
 		spriteBatcher.draw(
 				(Texture) world.game.assetManager.get("data/bush.png"), 0, 0,
-				Gdx.graphics.getWidth(), 300);
+				Gdx.graphics.getWidth(), 200);
 		spriteBatcher.draw(
 				(Texture) world.game.assetManager.get("data/kid6464.png"),
 				Gdx.graphics.getWidth() / 2 - 25, 0, 64, 64);

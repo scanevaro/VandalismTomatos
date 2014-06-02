@@ -70,7 +70,7 @@ public class WorldOrthoStyle {
 
 		Random rand = new Random();
 		if (rand.nextFloat() > 0.5f)
-			x = 640;
+			x = Gdx.graphics.getWidth();
 		else
 			x = 0;
 

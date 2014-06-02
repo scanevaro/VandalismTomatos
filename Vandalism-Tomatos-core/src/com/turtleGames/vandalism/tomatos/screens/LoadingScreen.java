@@ -83,15 +83,43 @@ public class LoadingScreen implements Screen {
 		game.assetManager.load("data/kid6464.png", Texture.class);
 		game.assetManager.load("data/background.png", Texture.class);
 		game.assetManager.load("data/bush.png", Texture.class);
+		game.assetManager.load("data/target1hit.png", Texture.class);
+		game.assetManager.load("data/target2hit.png", Texture.class);
+		game.assetManager.load("data/cathit.png", Texture.class);
+		game.assetManager.load("data/doghit.png", Texture.class);
+		game.assetManager.load("data/projectileHit.png", Texture.class);
 		game.assetManager.load("data/targetAnimation.pack", TextureAtlas.class);
+		game.assetManager.load("data/target2.pack", TextureAtlas.class);
+		game.assetManager.load("data/dogAnim.pack", TextureAtlas.class);
+		game.assetManager.load("data/cat.pack", TextureAtlas.class);
+		game.assetManager.load("data/projectile.pack", TextureAtlas.class);
 
 		game.assetManager.finishLoading();
 
 		TextureAtlas targetAnimAtlas = game.assetManager.get(
 				"data/targetAnimation.pack", TextureAtlas.class);
-
 		game.assets.targetAnimation = new Animation(0.25f,
 				targetAnimAtlas.getRegions());
+
+		TextureAtlas target2AnimAtlas = game.assetManager.get(
+				"data/target2.pack", TextureAtlas.class);
+		game.assets.target2Animation = new Animation(0.25f,
+				target2AnimAtlas.getRegions());
+
+		TextureAtlas dogAnimAtlas = game.assetManager.get("data/dogAnim.pack",
+				TextureAtlas.class);
+		game.assets.dogAnimation = new Animation(0.25f,
+				dogAnimAtlas.getRegions());
+
+		TextureAtlas catAnimAtlas = game.assetManager.get("data/cat.pack",
+				TextureAtlas.class);
+		game.assets.catAnimation = new Animation(0.25f,
+				catAnimAtlas.getRegions());
+
+		TextureAtlas projectileAnimAtlas = game.assetManager.get(
+				"data/projectile.pack", TextureAtlas.class);
+		game.assets.projectileAnimation = new Animation(0.25f,
+				projectileAnimAtlas.getRegions());
 	}
 
 	@Override

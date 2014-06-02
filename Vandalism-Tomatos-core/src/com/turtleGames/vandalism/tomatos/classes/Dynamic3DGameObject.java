@@ -29,7 +29,7 @@ public class Dynamic3DGameObject extends DynamicGameObject {
 	private void setVelocity() {
 		Random rand = new Random();
 
-		if (spacePos.x >= 0)
+		if (spacePos.x == 0)
 			velocity.set(rand.nextFloat() * 15, 0);
 		else
 			velocity.set(rand.nextFloat() * -15, 0);

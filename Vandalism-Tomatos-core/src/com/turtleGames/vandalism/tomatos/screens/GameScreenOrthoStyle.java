@@ -116,12 +116,9 @@ public class GameScreenOrthoStyle implements Screen {
 			else if (!world.impactSetter.isShooting()) {
 				world.impactSetter.setShooting(true);
 				world.projectile.setImpactSpot(world.impactSetter.position.set(
-						Gdx.graphics.getWidth() / 2
-								- world.impactSetter.position.x,
-						Gdx.graphics.getHeight() / 2
-								- world.impactSetter.position.y,
-						Gdx.graphics.getHeight() / 2
-								- world.impactSetter.position.z));
+						world.impactSetter.position.x,
+						world.impactSetter.position.y,
+						world.impactSetter.position.z));
 				world.projectile.setUpdate(true);
 				world.projectile.prepare();
 				world.impactSetter.setActivate(false);
