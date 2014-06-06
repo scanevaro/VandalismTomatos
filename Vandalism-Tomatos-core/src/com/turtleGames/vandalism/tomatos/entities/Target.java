@@ -1,17 +1,27 @@
 package com.turtleGames.vandalism.tomatos.entities;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
+import java.util.Random;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
 
 public class Target extends Dynamic3DGameObject {
 
-	public float stateTime;
-	private Animation animation;
+	public static final int TARGET1 = 0;
+	public static final int TARGET2 = 1;
+	public static final int DOG = 2;
+	public static final int CAT = 3;
 
-	public Target(float x, float y, float width, float height,
-			Animation animation) {
+	public static Random rand;
+
+	public float stateTime;
+	public int type;
+
+	public Target(float x, float y, float width, float height, int type) {
 		super(x, y, width, height);
+
+		if (rand == null)
+			rand = new Random();
 
 		stateTime = 0;
 
@@ -19,7 +29,8 @@ public class Target extends Dynamic3DGameObject {
 
 		bounds = new Rectangle(x - width / 2, y - height / 2, width, height);
 
-		this.setAnimation(animation);
+		this.type = type;
+		setVelocity();
 	}
 
 	private void setZ() {
@@ -40,19 +51,40 @@ public class Target extends Dynamic3DGameObject {
 		}
 	}
 
+	private void setVelocity() {
+		switch (type) {
+			case TARGET1:
+				if (spacePos.x == 0)
+					velocity.set(rand.nextFloat() * 20, 0);
+				else
+					velocity.set(rand.nextFloat() * -20, 0);
+				break;
+			case TARGET2:
+				if (spacePos.x == 0)
+					velocity.set(rand.nextFloat() * 15, 0);
+				else
+					velocity.set(rand.nextFloat() * -15, 0);
+				break;
+			case DOG:
+				if (spacePos.x == 0)
+					velocity.set(rand.nextFloat() * 30, 0);
+				else
+					velocity.set(rand.nextFloat() * -30, 0);
+				break;
+			case CAT:
+				if (spacePos.x == 0)
+					velocity.set(rand.nextFloat() * 33, 0);
+				else
+					velocity.set(rand.nextFloat() * -33, 0);
+				break;
+		}
+	}
+
 	public void update(float delta) {
-		spacePos.add(velocity.x * delta, 0, 0);
+		spacePos.add(velocity.x * delta, velocity.y * delta, 0);
 		bounds.set(spacePos.x - width / 2, spacePos.y - height / 2, width,
 				height);
 
 		stateTime += delta;
-	}
-
-	public Animation getAnimation() {
-		return animation;
-	}
-
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
 	}
 }

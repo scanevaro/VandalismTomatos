@@ -118,7 +118,7 @@ public class LoadingScreen implements Screen {
 
 		TextureAtlas projectileAnimAtlas = game.assetManager.get(
 				"data/projectile.pack", TextureAtlas.class);
-		game.assets.projectileAnimation = new Animation(0.25f,
+		game.assets.projectileAnimation = new Animation(0.15f,
 				projectileAnimAtlas.getRegions());
 	}
 

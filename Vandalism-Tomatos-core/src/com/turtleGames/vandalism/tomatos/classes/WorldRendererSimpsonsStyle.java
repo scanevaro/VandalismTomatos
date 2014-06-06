@@ -89,7 +89,7 @@ public class WorldRendererSimpsonsStyle {
 		spriteBatcher.setProjectionMatrix(orthoBackgroundCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		world.projectile.draw(spriteBatcher);
+//		world.projectile.draw(spriteBatcher);
 		spriteBatcher.end();
 	}
 

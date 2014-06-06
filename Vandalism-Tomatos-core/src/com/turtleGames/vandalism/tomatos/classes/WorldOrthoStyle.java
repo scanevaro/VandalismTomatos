@@ -78,7 +78,7 @@ public class WorldOrthoStyle {
 
 		target = new Target(x, y, game.assets.targetAnimation.getKeyFrame(0)
 				.getRegionWidth(), game.assets.targetAnimation.getKeyFrame(0)
-				.getRegionHeight(), game.assets.targetAnimation);
+				.getRegionHeight(), rand.nextInt(4));
 
 		targets.add(target);
 	}
@@ -88,8 +88,7 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateProjectile() {
-		projectile = new Projectile(game.assetManager.get(
-				"data/projectile.png", Texture.class));
+		projectile = new Projectile();
 	}
 
 	public void update(float deltaTime) {

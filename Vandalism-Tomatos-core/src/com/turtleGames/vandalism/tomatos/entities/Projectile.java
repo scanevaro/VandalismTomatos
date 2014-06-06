@@ -1,8 +1,6 @@
 package com.turtleGames.vandalism.tomatos.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
@@ -13,27 +11,17 @@ public class Projectile extends Dynamic3DGameObject {
 
 	private Vector3 velocity;
 	public Circle bounds;
-	private boolean update;
-	private Texture texture;
+	public boolean update;
 	private float impactSpot;
 	public float stateTime;
 	private float flyghtTime;
 
-	public Projectile(Texture texture) {
-		super(Gdx.graphics.getWidth() / 2, 0, texture.getWidth(), texture
-				.getHeight());
+	public Projectile() {
+		super(Gdx.graphics.getWidth() / 2, 0, 64, 64);
 		velocity = new Vector3();
-		this.texture = texture;
-		bounds = new Circle(spacePos.z, spacePos.y, texture.getWidth());
+		bounds = new Circle(spacePos.z, spacePos.y, 64);
 		flyghtTime = 1;
 		stateTime = 0;
-	}
-
-	public void draw(SpriteBatch batcher) {
-		if (update)
-			batcher.draw(texture, spacePos.x - texture.getWidth() / 2,
-					spacePos.y - texture.getHeight() / 2, texture.getWidth(),
-					texture.getHeight());
 	}
 
 	public void update(float delta) {
@@ -44,24 +32,18 @@ public class Projectile extends Dynamic3DGameObject {
 			spacePos.y = (float) (-0.5 * gravity * stateTime * stateTime
 					+ velocity.y * stateTime + 0);
 
-			bounds.set(spacePos.x - dimensions.x / 2, spacePos.y - dimensions.y
-					/ 2, dimensions.x);
-
 			if (spacePos.y < 150)
-				dimensions.set(width, height);
-			else if (spacePos.y > 150 && spacePos.y < 250) {
-				width = width / 2;
-				height = height / 2;
-				dimensions.set(width, height);
-			} else if (spacePos.y > 250 && spacePos.y < 350) {
-				width = width / 3;
-				height = height / 3;
-				dimensions.set(width, height);
-			} else {
-				width = width / 4;
-				height = height / 4;
-				dimensions.set(width, height);
-			}
+				bounds.set(spacePos.x - dimensions.x / 2, spacePos.y
+						- dimensions.y / 2, dimensions.x);
+			else if (spacePos.y > 150 && spacePos.y < 250)
+				bounds.set(spacePos.x - dimensions.x / 2 / 2, spacePos.y
+						- dimensions.y / 2 / 2, dimensions.x);
+			else if (spacePos.y > 250 && spacePos.y < 350)
+				bounds.set(spacePos.x - dimensions.x / 3 / 2, spacePos.y
+						- dimensions.y / 3 / 2, dimensions.x);
+			else
+				bounds.set(spacePos.x - dimensions.x / 4 / 2, spacePos.y
+						- dimensions.y / 4 / 2, dimensions.x);
 
 			if (stateTime > flyghtTime)
 				setUpdate(false);

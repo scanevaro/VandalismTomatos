@@ -1,7 +1,5 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
-import java.util.Random;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -17,21 +15,9 @@ public class Dynamic3DGameObject extends DynamicGameObject {
 
 		spacePos = new Vector3(x, y, y);
 
-		setVelocity();
-		// setAccel();
-
 		this.width = width;
 		this.height = height;
 
 		dimensions = new Vector2(width, height);
-	}
-
-	private void setVelocity() {
-		Random rand = new Random();
-
-		if (spacePos.x == 0)
-			velocity.set(rand.nextFloat() * 15, 0);
-		else
-			velocity.set(rand.nextFloat() * -15, 0);
 	}
 }

@@ -3,12 +3,19 @@ package com.turtleGames.vandalism.tomatos.classes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.turtleGames.vandalism.tomatos.Tomatos;
+import com.turtleGames.vandalism.tomatos.entities.Projectile;
 import com.turtleGames.vandalism.tomatos.entities.Target;
 
 public class WorldRendererOrthoStyle {
 
+	Tomatos game;
 	WorldOrthoStyle world;
 	OrthographicCamera orthoTargetsCam;
 	OrthographicCamera orthoBackgroundCam;
@@ -16,7 +23,8 @@ public class WorldRendererOrthoStyle {
 	ModelBatch modelBatcher;
 
 	public WorldRendererOrthoStyle(SpriteBatch spriteBatcher,
-			ModelBatch modelBatcher, WorldOrthoStyle world) {
+			ModelBatch modelBatcher, WorldOrthoStyle world, Tomatos game) {
+		this.game = game;
 		this.world = world;
 		this.spriteBatcher = spriteBatcher;
 		this.modelBatcher = modelBatcher;
@@ -63,10 +71,13 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
 		for (Target target : world.targets) {
-			spriteBatcher.draw(
-					target.getAnimation().getKeyFrame(target.stateTime, true),
-					target.spacePos.x, target.spacePos.y, target.dimensions.x,
-					target.dimensions.y);
+			/* getAnimation(type, dimensions); */
+			Animation animation = game.assets.getAnimation(target.type);
+			TextureRegion texture = animation.getKeyFrame(target.stateTime,
+					true);
+
+			spriteBatcher.draw(texture, target.spacePos.x, target.spacePos.y,
+					target.dimensions.x, target.dimensions.y);
 		}
 		spriteBatcher.end();
 	}
@@ -75,7 +86,19 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.setProjectionMatrix(orthoBackgroundCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		world.projectile.draw(spriteBatcher);
+
+		Projectile projectile = world.projectile;
+		if (projectile.update) {
+			Vector3 position = projectile.spacePos;
+			Vector2 dimensions = projectile.dimensions;
+			float stateTime = projectile.stateTime;
+			Animation animation = game.assets.projectileAnimation;
+			TextureRegion texture = animation.getKeyFrame(stateTime, true);
+
+			spriteBatcher.draw(texture, position.x - dimensions.x / 2,
+					position.y - dimensions.y / 2, dimensions.x, dimensions.y);
+		}
+
 		spriteBatcher.end();
 	}
 

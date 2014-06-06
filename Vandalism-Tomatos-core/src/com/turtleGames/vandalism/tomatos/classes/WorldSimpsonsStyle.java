@@ -91,8 +91,8 @@ public class WorldSimpsonsStyle {
 	}
 
 	private void initiateProjectile() {
-		projectile = new Projectile(game.assetManager.get(
-				"data/projectile.png", Texture.class));
+//		projectile = new Projectile(game.assetManager.get(
+//				"data/projectile.png", Texture.class));
 	}
 
 	public void update(float deltaTime) {

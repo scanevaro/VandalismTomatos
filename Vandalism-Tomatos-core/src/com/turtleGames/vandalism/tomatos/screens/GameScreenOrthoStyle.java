@@ -63,7 +63,7 @@ public class GameScreenOrthoStyle implements Screen {
 		};
 		world = new WorldOrthoStyle(game, worldListener);
 		worldRenderer = new WorldRendererOrthoStyle(spriteBatcher,
-				modelBatcher, world);
+				modelBatcher, world, game);
 		world.worldRenderer = worldRenderer;
 
 		state = GameState.READY.ordinal();
