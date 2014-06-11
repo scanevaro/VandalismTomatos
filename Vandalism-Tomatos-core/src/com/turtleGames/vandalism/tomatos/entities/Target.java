@@ -16,7 +16,7 @@ public class Target extends Dynamic3DGameObject {
 
 	public static final int WALKING = 0;
 	public static final int HIT = 1;
-	public static final int IDLE = 2;
+	public static final int REMOVE = 2;
 
 	private Random rand;
 
@@ -167,10 +167,7 @@ public class Target extends Dynamic3DGameObject {
 				break;
 			case HIT:
 				if (stateTime >= 2f)
-					setState(IDLE);
-				break;
-			case IDLE:
-				// TODO
+					setState(REMOVE);
 				break;
 		}
 

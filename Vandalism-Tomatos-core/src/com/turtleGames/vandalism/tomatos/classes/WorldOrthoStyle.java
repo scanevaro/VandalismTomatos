@@ -103,7 +103,7 @@ public class WorldOrthoStyle {
 		updateTargets(delta);
 		updateCamera();
 		checkCollitions();
-		checkTargets();
+		checkTargetsState();
 	}
 
 	private void updateImpactSetter(float delta) {
@@ -152,9 +152,14 @@ public class WorldOrthoStyle {
 		}
 	}
 
-	private void checkTargets() {
-		if (targets.size == 0) {
-			initiateTargets();
+	private void checkTargetsState() {
+		for (int i = 0; i < targets.size; i++) {
+			Target target = targets.get(i);
+			if (target.getState() == Target.REMOVE) {
+				targets.removeIndex(i);
+
+				targets.add(new Target(game));
+			}
 		}
 	}
 
