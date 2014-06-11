@@ -1,7 +1,5 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
@@ -32,7 +30,6 @@ public class WorldOrthoStyle {
 	public WorldRendererOrthoStyle worldRenderer;
 
 	Background background;
-	public Target target;
 	public ImpactSetter impactSetter;
 	public Projectile projectile;
 
@@ -49,7 +46,7 @@ public class WorldOrthoStyle {
 
 		initiateBackground();
 		initiateTargetsArray();
-		initiateTarget();
+		initiateTargets();
 		initiateImpactSetter();
 		initiateProjectile();
 
@@ -65,22 +62,12 @@ public class WorldOrthoStyle {
 		targets = new Array<Target>();
 	}
 
-	private void initiateTarget() {
-		float x, y;
+	private void initiateTargets() {
+		for (int i = 0; i < 4; i++) {
+			Target target = new Target(game);
 
-		Random rand = new Random();
-		if (rand.nextFloat() > 0.5f)
-			x = Gdx.graphics.getWidth();
-		else
-			x = 0;
-
-		y = rand.nextFloat() * 250;
-
-		target = new Target(x, y, game.assets.targetAnimation.getKeyFrame(0)
-				.getRegionWidth(), game.assets.targetAnimation.getKeyFrame(0)
-				.getRegionHeight(), rand.nextInt(4));
-
-		targets.add(target);
+			targets.add(target);
+		}
 	}
 
 	private void initiateImpactSetter() {
@@ -88,7 +75,7 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateProjectile() {
-		projectile = new Projectile();
+		projectile = new Projectile(game);
 	}
 
 	public void update(float deltaTime) {
@@ -128,13 +115,17 @@ public class WorldOrthoStyle {
 	}
 
 	private void updateTargets(float delta) {
-		target.update(delta);
+		for (int i = 0; i < targets.size; i++)
+			targets.get(i).update(delta);
 	}
 
 	private void updateCamera() {
-		if (projectile.isUpdate()) {
+		if (projectile.state == Projectile.FLYING) {
 			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
 			worldRenderer.orthoTargetsCam.position.y += 0.5f;
+		} else if (projectile.state == Projectile.HIT
+				|| projectile.state == Projectile.GROUND) {
+
 		} else if (projectile.stateTime >= 0) {
 			worldRenderer.orthoTargetsCam.zoom += 0.01f;
 			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
@@ -145,7 +136,8 @@ public class WorldOrthoStyle {
 	}
 
 	private void checkCollitions() {
-		if (impactSetter.isShooting() && projectile.stateTime >= 0.5f) {
+		if (impactSetter.isShooting() && projectile.stateTime >= 0.5f
+				&& projectile.state == Projectile.FLYING) {
 			for (int i = 0; i < targets.size; i++) {
 				Target target = targets.get(i);
 				if (target.spacePos.z <= projectile.spacePos.z + 8
@@ -153,8 +145,8 @@ public class WorldOrthoStyle {
 					if (Intersector.overlaps(projectile.bounds, target.bounds))
 						if (target.spacePos.z <= projectile.spacePos.z + 32
 								&& target.spacePos.z >= projectile.spacePos.z - 32) {
-							targets.removeIndex(i);
-							projectile.setUpdate(false);
+							target.setState(Target.HIT);
+							projectile.setState(Projectile.HIT);
 						}
 			}
 		}
@@ -162,7 +154,7 @@ public class WorldOrthoStyle {
 
 	private void checkTargets() {
 		if (targets.size == 0) {
-			initiateTarget();
+			initiateTargets();
 		}
 	}
 

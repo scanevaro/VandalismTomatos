@@ -2,7 +2,9 @@ package com.turtleGames.vandalism.tomatos.entities;
 
 import java.util.Random;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
 
 public class Target extends Dynamic3DGameObject {
@@ -12,25 +14,120 @@ public class Target extends Dynamic3DGameObject {
 	public static final int DOG = 2;
 	public static final int CAT = 3;
 
-	public static Random rand;
+	public static final int WALKING = 0;
+	public static final int HIT = 1;
+	public static final int IDLE = 2;
+
+	private Random rand;
+
+	private Tomatos game;
 
 	public float stateTime;
+	private int state;
 	public int type;
 
-	public Target(float x, float y, float width, float height, int type) {
-		super(x, y, width, height);
+	public Target(Tomatos game) {
+		super();
+
+		this.game = game;
 
 		if (rand == null)
 			rand = new Random();
 
 		stateTime = 0;
+		type = rand.nextInt(4);
+		setState(WALKING);
 
-		setZ();
+		instantiate();
+	}
 
-		bounds = new Rectangle(x - width / 2, y - height / 2, width, height);
+	private void instantiate() {
+		if (rand == null)
+			rand = new Random();
 
-		this.type = type;
 		setVelocity();
+		setSpacePos();
+		setDimensions();
+		setZ();
+		setBounds();
+	}
+
+	private void setVelocity() {
+		switch (type) {
+			case TARGET1:
+				if (spacePos.x <= 0)
+					velocity.set(30, 0);
+				else
+					velocity.set(-30, 0);
+				break;
+			case TARGET2:
+				if (spacePos.x <= 0)
+					velocity.set(25, 0);
+				else
+					velocity.set(-25, 0);
+				break;
+			case DOG:
+				if (spacePos.x <= 0)
+					velocity.set(40, 0);
+				else
+					velocity.set(-40, 0);
+				break;
+			case CAT:
+				if (spacePos.x <= 0)
+					velocity.set(43, 0);
+				else
+					velocity.set(-43, 0);
+				break;
+		}
+	}
+
+	private void setSpacePos() {
+		float x = 0, y;
+
+		y = rand.nextFloat() * 250;
+
+		if (spacePos.x == 0) {
+			if (rand.nextInt(2) == 0)
+				x = Gdx.graphics.getWidth();
+			else
+				x = 0;
+		} else {
+			spacePos.y = y;
+			spacePos.z = y;
+			return;
+		}
+
+		spacePos.set(x, y, y);
+	}
+
+	private void setDimensions() {
+		TextureRegion texture;
+		switch (type) {
+			case TARGET1:
+				texture = game.assets.getAnimation(TARGET1).getKeyFrame(0);
+
+				width = texture.getRegionWidth();
+				height = texture.getRegionHeight();
+				break;
+			case TARGET2:
+				texture = game.assets.getAnimation(TARGET2).getKeyFrame(0);
+
+				width = texture.getRegionWidth();
+				height = texture.getRegionHeight();
+				break;
+			case DOG:
+				texture = game.assets.getAnimation(DOG).getKeyFrame(0);
+
+				width = texture.getRegionWidth();
+				height = texture.getRegionHeight();
+				break;
+			case CAT:
+				texture = game.assets.getAnimation(CAT).getKeyFrame(0);
+
+				width = texture.getRegionWidth();
+				height = texture.getRegionHeight();
+				break;
+		}
 	}
 
 	private void setZ() {
@@ -51,40 +148,42 @@ public class Target extends Dynamic3DGameObject {
 		}
 	}
 
-	private void setVelocity() {
-		switch (type) {
-			case TARGET1:
-				if (spacePos.x == 0)
-					velocity.set(rand.nextFloat() * 20, 0);
-				else
-					velocity.set(rand.nextFloat() * -20, 0);
-				break;
-			case TARGET2:
-				if (spacePos.x == 0)
-					velocity.set(rand.nextFloat() * 15, 0);
-				else
-					velocity.set(rand.nextFloat() * -15, 0);
-				break;
-			case DOG:
-				if (spacePos.x == 0)
-					velocity.set(rand.nextFloat() * 30, 0);
-				else
-					velocity.set(rand.nextFloat() * -30, 0);
-				break;
-			case CAT:
-				if (spacePos.x == 0)
-					velocity.set(rand.nextFloat() * 33, 0);
-				else
-					velocity.set(rand.nextFloat() * -33, 0);
-				break;
-		}
+	private void setBounds() {
+		bounds.set(spacePos.x - width / 2, spacePos.y - height / 2, width,
+				height);
 	}
 
 	public void update(float delta) {
-		spacePos.add(velocity.x * delta, velocity.y * delta, 0);
-		bounds.set(spacePos.x - width / 2, spacePos.y - height / 2, width,
-				height);
+		switch (state) {
+			case WALKING:
+				spacePos.add(velocity.x * delta, velocity.y * delta, 0);
+				bounds.set(spacePos.x - width / 2, spacePos.y - height / 2,
+						width, height);
+
+				if (spacePos.x <= 0 - dimensions.x
+						|| spacePos.x >= Gdx.graphics.getWidth()) {
+					instantiate();
+				}
+				break;
+			case HIT:
+				if (stateTime >= 2f)
+					setState(IDLE);
+				break;
+			case IDLE:
+				// TODO
+				break;
+		}
 
 		stateTime += delta;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+
+		stateTime = 0;
 	}
 }

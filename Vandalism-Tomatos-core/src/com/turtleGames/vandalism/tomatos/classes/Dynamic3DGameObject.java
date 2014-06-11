@@ -10,14 +10,10 @@ public class Dynamic3DGameObject extends DynamicGameObject {
 	public float width;
 	public float height;
 
-	public Dynamic3DGameObject(float x, float y, float width, float height) {
+	public Dynamic3DGameObject() {
 		super();
 
-		spacePos = new Vector3(x, y, y);
-
-		this.width = width;
-		this.height = height;
-
-		dimensions = new Vector2(width, height);
+		spacePos = new Vector3();
+		dimensions = new Vector2();
 	}
 }

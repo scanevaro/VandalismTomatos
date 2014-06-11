@@ -41,7 +41,8 @@ public class ImpactSetter {
 			addedX = addedX - Gdx.graphics.getWidth() / 100 * x;
 			addedY = addedY - Gdx.graphics.getHeight() / 100 * y;
 
-			if (position.y > Gdx.graphics.getHeight() * 0.8f)
+			if (position.y > Gdx.graphics.getHeight() * 0.8f || addedX <= 0
+					|| addedY <= 0)
 				activate = false;
 		}
 	}

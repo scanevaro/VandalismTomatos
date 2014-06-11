@@ -70,14 +70,57 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		for (Target target : world.targets) {
-			/* getAnimation(type, dimensions); */
-			Animation animation = game.assets.getAnimation(target.type);
-			TextureRegion texture = animation.getKeyFrame(target.stateTime,
-					true);
 
-			spriteBatcher.draw(texture, target.spacePos.x, target.spacePos.y,
-					target.dimensions.x, target.dimensions.y);
+		for (Target target : world.targets) {
+			if (target.getState() == Target.WALKING) {
+				/* getAnimation(type, dimensions); */
+				Animation animation = game.assets.getAnimation(target.type);
+				TextureRegion texture = animation.getKeyFrame(target.stateTime,
+						true);
+
+				spriteBatcher.draw(texture, target.spacePos.x,
+						target.spacePos.y, target.dimensions.x,
+						target.dimensions.y);
+			} else if (target.getState() == Target.HIT) {
+				Texture texture = null;
+
+				switch (target.type) {
+					case Target.TARGET1:
+						texture = game.assetManager.get("data/target1Hit.png",
+								Texture.class);
+
+						spriteBatcher.draw(texture, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+						break;
+					case Target.TARGET2:
+						texture = game.assetManager.get("data/target2Hit.png",
+								Texture.class);
+
+						spriteBatcher.draw(texture, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+						break;
+					case Target.DOG:
+						texture = game.assetManager.get("data/dogHit.png",
+								Texture.class);
+
+						spriteBatcher.draw(texture, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+						break;
+					case Target.CAT:
+						texture = game.assetManager.get("data/catHit.png",
+								Texture.class);
+
+						spriteBatcher.draw(texture, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+						break;
+				}
+			} else {
+
+			}
 		}
 		spriteBatcher.end();
 	}
@@ -92,11 +135,23 @@ public class WorldRendererOrthoStyle {
 			Vector3 position = projectile.spacePos;
 			Vector2 dimensions = projectile.dimensions;
 			float stateTime = projectile.stateTime;
-			Animation animation = game.assets.projectileAnimation;
-			TextureRegion texture = animation.getKeyFrame(stateTime, true);
 
-			spriteBatcher.draw(texture, position.x - dimensions.x / 2,
-					position.y - dimensions.y / 2, dimensions.x, dimensions.y);
+			if (projectile.getState() == Projectile.FLYING) {
+				Animation animation = game.assets.projectileAnimation;
+				TextureRegion textureRegion = animation.getKeyFrame(stateTime,
+						true);
+
+				spriteBatcher.draw(textureRegion,
+						position.x - dimensions.x / 2, position.y
+								- dimensions.y / 2, dimensions.x, dimensions.y);
+			} else {
+				Texture texture = game.assetManager.get(
+						"data/projectileHit.png", Texture.class);
+
+				spriteBatcher.draw(texture, position.x - dimensions.x / 2,
+						position.y - dimensions.y / 2, dimensions.x,
+						dimensions.y);
+			}
 		}
 
 		spriteBatcher.end();

@@ -83,10 +83,10 @@ public class LoadingScreen implements Screen {
 		game.assetManager.load("data/kid6464.png", Texture.class);
 		game.assetManager.load("data/background.png", Texture.class);
 		game.assetManager.load("data/bush.png", Texture.class);
-		game.assetManager.load("data/target1hit.png", Texture.class);
-		game.assetManager.load("data/target2hit.png", Texture.class);
-		game.assetManager.load("data/cathit.png", Texture.class);
-		game.assetManager.load("data/doghit.png", Texture.class);
+		game.assetManager.load("data/target1Hit.png", Texture.class);
+		game.assetManager.load("data/target2Hit.png", Texture.class);
+		game.assetManager.load("data/catHit.png", Texture.class);
+		game.assetManager.load("data/dogHit.png", Texture.class);
 		game.assetManager.load("data/projectileHit.png", Texture.class);
 		game.assetManager.load("data/targetAnimation.pack", TextureAtlas.class);
 		game.assetManager.load("data/target2.pack", TextureAtlas.class);
