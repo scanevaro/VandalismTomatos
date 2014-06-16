@@ -3,6 +3,7 @@ package com.turtleGames.vandalism.tomatos.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
@@ -14,21 +15,22 @@ public class Projectile extends Dynamic3DGameObject {
 	public static final int HIT = 2;
 	public static final int GROUND = 3;
 
-	private final float gravity = 350;
+	private float gravity;
 
 	private Vector3 velocity;
 	public Circle bounds;
 	public boolean update;
-	private float impactSpot;
+	private Vector2 impactSpot;
 	public float stateTime;
 	public int state;
-	private float flyghtTime;
+	public float flyghtTime;
+	private float impactTime;
 
 	public Projectile(Tomatos game) {
 		super();
 
-		flyghtTime = 1;
 		stateTime = 0;
+		gravity = 0;
 
 		spacePos.set(Gdx.graphics.getWidth() / 2, 0, 0);
 
@@ -37,12 +39,14 @@ public class Projectile extends Dynamic3DGameObject {
 		dimensions.set(texture.getRegionWidth(), texture.getRegionHeight());
 
 		velocity = new Vector3();
+		impactSpot = new Vector2();
 
 		setState(IDLE);
 	}
 
 	public void update(float delta) {
 		if (update) {
+			stateTime += delta;
 			switch (getState()) {
 				case FLYING:
 					spacePos.z = velocity.z * stateTime + 0;
@@ -50,19 +54,15 @@ public class Projectile extends Dynamic3DGameObject {
 							* stateTime + velocity.y * stateTime + 0);
 
 					if (spacePos.y < 150)
-						bounds.set(spacePos.x - dimensions.x / 2, spacePos.y
-								- dimensions.y / 2, dimensions.x);
+						bounds.set(spacePos.x, spacePos.y, dimensions.x);
 					else if (spacePos.y > 150 && spacePos.y < 250)
-						bounds.set(spacePos.x - dimensions.x / 2 / 2,
-								spacePos.y - dimensions.y / 2 / 2, dimensions.x);
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 2);
 					else if (spacePos.y > 250 && spacePos.y < 350)
-						bounds.set(spacePos.x - dimensions.x / 3 / 2,
-								spacePos.y - dimensions.y / 3 / 2, dimensions.x);
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 3);
 					else
-						bounds.set(spacePos.x - dimensions.x / 4 / 2,
-								spacePos.y - dimensions.y / 4 / 2, dimensions.x);
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 4);
 
-					if (stateTime > flyghtTime) {
+					if (stateTime > impactTime) {
 						setUpdate(false);
 						setState(IDLE);
 					}
@@ -75,18 +75,32 @@ public class Projectile extends Dynamic3DGameObject {
 					// TODO
 					break;
 			}
-
-			stateTime += delta;
 		} else
 			stateTime -= delta;
+	}
+
+	public Vector2 getImpactSpot() {
+		return impactSpot;
+	}
+
+	public void setImpactSpot(Vector3 impactPos) {
+		impactSpot.set(impactPos.y * 2, impactPos.y);
 	}
 
 	public void prepare() {
 		spacePos.set(Gdx.graphics.getWidth() / 2, 0, 0);
 
-		velocity.z = (impactSpot - spacePos.z) / flyghtTime;
-		velocity.y = (float) ((impactSpot + 0.5 * gravity * flyghtTime
-				* flyghtTime - spacePos.y) / flyghtTime);
+		impactTime = (float) (impactSpot.x * 1.5f / (Gdx.graphics.getHeight() * 0.8));
+		flyghtTime = 100 * impactTime / 75;
+
+		float funtionY = impactSpot.y + impactSpot.y * 1 / 4;
+
+		gravity = funtionY
+				/ ((-0.5f * flyghtTime / 2 * flyghtTime / 2) + 0.5f
+						* flyghtTime * flyghtTime / 2);
+
+		velocity.z = (impactSpot.x - spacePos.z) / impactTime;
+		velocity.y = (float) ((0.5 * gravity * flyghtTime * flyghtTime - spacePos.y) / flyghtTime);
 	}
 
 	public boolean isUpdate() {
@@ -99,17 +113,8 @@ public class Projectile extends Dynamic3DGameObject {
 		spacePos.set(0, 0, 0);
 		bounds.set(0, 0, 0);
 
-		if (update) {
+		if (update)
 			setState(FLYING);
-		}
-	}
-
-	public float getImpactSpot() {
-		return impactSpot;
-	}
-
-	public void setImpactSpot(Vector3 impactPos) {
-		impactSpot = (impactPos.z - impactPos.y) / 2 + impactPos.y;
 	}
 
 	public int getState() {

@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.classes.WorldOrthoStyle;
 import com.turtleGames.vandalism.tomatos.classes.WorldRendererOrthoStyle;
+import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
+import com.turtleGames.vandalism.tomatos.entities.Projectile;
 
 public class GameScreenOrthoStyle implements Screen {
 
@@ -107,21 +109,20 @@ public class GameScreenOrthoStyle implements Screen {
 
 	private void updateRunning(float delta) {
 		if (Gdx.input.justTouched()) {
-			if (!world.projectile.isUpdate())
-				world.impactSetter.setShooting(false);
+			Projectile projectile = world.projectile;
+			ImpactSetter impactSetter = world.impactSetter;
 
-			if (!world.impactSetter.isActivate()
-					&& !world.impactSetter.isShooting())
-				world.impactSetter.setActivate(true);
-			else if (!world.impactSetter.isShooting()) {
-				world.impactSetter.setShooting(true);
-				world.projectile.setImpactSpot(world.impactSetter.position.set(
-						world.impactSetter.position.x,
-						world.impactSetter.position.y,
-						world.impactSetter.position.z));
-				world.projectile.setUpdate(true);
-				world.projectile.prepare();
-				world.impactSetter.setActivate(false);
+			if (!projectile.isUpdate())
+				impactSetter.setShooting(false);
+
+			if (!impactSetter.isActivate() && !impactSetter.isShooting())
+				impactSetter.setActivate(true);
+			else if (!impactSetter.isShooting()) {
+				impactSetter.setShooting(true);
+				projectile.setImpactSpot(impactSetter.position);
+				projectile.setUpdate(true);
+				projectile.prepare();
+				impactSetter.setActivate(false);
 			}
 		}
 	}

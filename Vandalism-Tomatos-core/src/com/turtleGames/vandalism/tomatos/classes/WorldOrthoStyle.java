@@ -120,23 +120,25 @@ public class WorldOrthoStyle {
 	}
 
 	private void updateCamera() {
-		if (projectile.state == Projectile.FLYING) {
-			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
-			worldRenderer.orthoTargetsCam.position.y += 0.5f;
-		} else if (projectile.state == Projectile.HIT
-				|| projectile.state == Projectile.GROUND) {
-
-		} else if (projectile.stateTime >= 0) {
-			worldRenderer.orthoTargetsCam.zoom += 0.01f;
-			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
-		} else {
-			worldRenderer.orthoTargetsCam.zoom = 1;
-			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
-		}
+		// if (projectile.state == Projectile.FLYING) {
+		// worldRenderer.orthoTargetsCam.zoom -= 0.01f;
+		// worldRenderer.orthoTargetsCam.position.y += 0.5f;
+		// } else if (projectile.state == Projectile.HIT
+		// || projectile.state == Projectile.GROUND) {
+		//
+		// } else if (projectile.stateTime >= 0) {
+		// worldRenderer.orthoTargetsCam.zoom += 0.01f;
+		// worldRenderer.orthoTargetsCam.position.y -= 0.5f;
+		// } else {
+		// worldRenderer.orthoTargetsCam.zoom = 1;
+		// worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() /
+		// 2;
+		// }
 	}
 
 	private void checkCollitions() {
-		if (impactSetter.isShooting() && projectile.stateTime >= 0.5f
+		if (impactSetter.isShooting()
+				&& projectile.stateTime >= projectile.flyghtTime / 2
 				&& projectile.state == Projectile.FLYING) {
 			for (int i = 0; i < targets.size; i++) {
 				Target target = targets.get(i);
