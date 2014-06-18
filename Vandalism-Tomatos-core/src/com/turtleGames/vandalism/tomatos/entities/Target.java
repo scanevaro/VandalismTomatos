@@ -82,9 +82,13 @@ public class Target extends Dynamic3DGameObject {
 	}
 
 	private void setSpacePos() {
-		float x = 0, y;
+		float x = 0, y = 0;
 
-		y = rand.nextFloat() * 250;
+		y = rand.nextFloat();
+		while (y > 0.75f && y < 0.25f)
+			y = rand.nextFloat();
+
+		y = y * Gdx.graphics.getHeight() * 0.8f;
 
 		if (spacePos.x == 0) {
 			if (rand.nextInt(2) == 0)
@@ -97,7 +101,7 @@ public class Target extends Dynamic3DGameObject {
 			return;
 		}
 
-		spacePos.set(x, y, y);
+		spacePos.set(x, y, y * 2);
 	}
 
 	private void setDimensions() {

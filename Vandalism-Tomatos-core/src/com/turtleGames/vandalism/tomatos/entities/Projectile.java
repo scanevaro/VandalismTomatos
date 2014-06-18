@@ -35,8 +35,10 @@ public class Projectile extends Dynamic3DGameObject {
 		spacePos.set(Gdx.graphics.getWidth() / 2, 0, 0);
 
 		TextureRegion texture = game.assets.projectileAnimation.getKeyFrame(0);
-		bounds = new Circle(spacePos.z, spacePos.y, texture.getRegionWidth());
-		dimensions.set(texture.getRegionWidth(), texture.getRegionHeight());
+		bounds = new Circle(spacePos.z, spacePos.y,
+				texture.getRegionWidth() / 2);
+		dimensions.set(texture.getRegionWidth() / 2,
+				texture.getRegionHeight() / 2);
 
 		velocity = new Vector3();
 		impactSpot = new Vector2();
