@@ -75,9 +75,6 @@ public class LoadingScreen implements Screen {
 		stage.addActor(logo);
 
 		// Add everything to be loaded, for instance:
-		game.assetManager.load("data/springGrass.png", Texture.class);
-		game.assetManager.load("data/grassStripe.png", Texture.class);
-		game.assetManager.load("data/grassBackground.png", Texture.class);
 		game.assetManager.load("data/kid50.png", Texture.class);
 		game.assetManager.load("data/projectile.png", Texture.class);
 		game.assetManager.load("data/kid6464.png", Texture.class);

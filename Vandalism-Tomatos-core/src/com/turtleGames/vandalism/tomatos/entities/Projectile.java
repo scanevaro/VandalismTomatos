@@ -20,7 +20,7 @@ public class Projectile extends Dynamic3DGameObject {
 	private Vector3 velocity;
 	public Circle bounds;
 	public boolean update;
-	private Vector2 impactSpot;
+	public Vector2 impactSpot;
 	public float stateTime;
 	public int state;
 	public float flyghtTime;
@@ -55,26 +55,27 @@ public class Projectile extends Dynamic3DGameObject {
 					spacePos.y = (float) (-0.5 * gravity * stateTime
 							* stateTime + velocity.y * stateTime + 0);
 
-					if (spacePos.y < 150)
-						bounds.set(spacePos.x, spacePos.y, dimensions.x);
-					else if (spacePos.y > 150 && spacePos.y < 250)
+					if (spacePos.z < Gdx.graphics.getHeight() * 0.25f * 2)
 						bounds.set(spacePos.x, spacePos.y, dimensions.x / 2);
-					else if (spacePos.y > 250 && spacePos.y < 350)
-						bounds.set(spacePos.x, spacePos.y, dimensions.x / 3);
+					else if (spacePos.z > Gdx.graphics.getHeight() * 0.25f * 2
+							&& spacePos.z < Gdx.graphics.getHeight() * 0.5f * 2)
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 2 / 2);
+					else if (spacePos.z > Gdx.graphics.getHeight() * 0.5f * 2
+							&& spacePos.z < Gdx.graphics.getHeight() * 0.75f * 2)
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 3 / 2);
 					else
-						bounds.set(spacePos.x, spacePos.y, dimensions.x / 4);
+						bounds.set(spacePos.x, spacePos.y, dimensions.x / 4 / 2);
 
-					if (stateTime > impactTime) {
-						setUpdate(false);
-						setState(IDLE);
-					}
+					if (stateTime >= impactTime)
+						setState(GROUND);
 					break;
 				case HIT:
 					if (stateTime >= 1f)
 						setState(IDLE);
 					break;
 				case GROUND:
-					// TODO
+					if (stateTime >= 1f)
+						setState(IDLE);
 					break;
 			}
 		} else
@@ -92,7 +93,7 @@ public class Projectile extends Dynamic3DGameObject {
 	public void prepare() {
 		spacePos.set(Gdx.graphics.getWidth() / 2, 0, 0);
 
-		impactTime = (float) (impactSpot.x * 1.5f / (Gdx.graphics.getHeight() * 0.8));
+		impactTime = (float) (impactSpot.x * 1.0f / (Gdx.graphics.getHeight() * 0.8));
 		flyghtTime = 100 * impactTime / 75;
 
 		float funtionY = impactSpot.y + impactSpot.y * 1 / 4;
@@ -132,6 +133,7 @@ public class Projectile extends Dynamic3DGameObject {
 				stateTime = 0;
 				break;
 			case GROUND:
+				stateTime = 0;
 				break;
 			case IDLE:
 				setUpdate(false);

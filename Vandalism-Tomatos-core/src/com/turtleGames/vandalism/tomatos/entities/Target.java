@@ -97,7 +97,7 @@ public class Target extends Dynamic3DGameObject {
 				x = 0;
 		} else {
 			spacePos.y = y;
-			spacePos.z = y;
+			spacePos.z = y * 2;
 			return;
 		}
 
@@ -135,13 +135,15 @@ public class Target extends Dynamic3DGameObject {
 	}
 
 	private void setZ() {
-		if (spacePos.y < 150)
+		if (spacePos.y < Gdx.graphics.getHeight() * 0.25f)
 			dimensions.set(width, height);
-		else if (spacePos.y > 150 && spacePos.y < 250) {
+		else if (spacePos.y > Gdx.graphics.getHeight() * 0.25f
+				&& spacePos.y < Gdx.graphics.getHeight() * 0.5f) {
 			width = width / 2;
 			height = height / 2;
 			dimensions.set(width, height);
-		} else if (spacePos.y > 250 && spacePos.y < 350) {
+		} else if (spacePos.y > Gdx.graphics.getHeight() * 0.5f
+				&& spacePos.y < Gdx.graphics.getHeight() * 0.75f) {
 			width = width / 3;
 			height = height / 3;
 			dimensions.set(width, height);
@@ -153,16 +155,14 @@ public class Target extends Dynamic3DGameObject {
 	}
 
 	private void setBounds() {
-		bounds.set(spacePos.x - width / 2, spacePos.y - height / 2, width,
-				height);
+		bounds.set(spacePos.x, spacePos.y, width, height);
 	}
 
 	public void update(float delta) {
 		switch (state) {
 			case WALKING:
 				spacePos.add(velocity.x * delta, velocity.y * delta, 0);
-				bounds.set(spacePos.x - width / 2, spacePos.y - height / 2,
-						width, height);
+				bounds.set(spacePos.x, spacePos.y, width, height);
 
 				if (spacePos.x <= 0 - dimensions.x
 						|| spacePos.x >= Gdx.graphics.getWidth()) {

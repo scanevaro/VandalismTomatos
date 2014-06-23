@@ -1,7 +1,10 @@
 package com.turtleGames.vandalism.tomatos.screens;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -32,6 +35,8 @@ public class GameScreenOrthoStyle implements Screen {
 	WorldRendererOrthoStyle worldRenderer;
 
 	BitmapFont font;
+
+	Music music;
 
 	@SuppressWarnings("deprecation")
 	public GameScreenOrthoStyle(Tomatos game) {
@@ -74,6 +79,19 @@ public class GameScreenOrthoStyle implements Screen {
 				Gdx.files.internal("data/wonder.ttf"));
 		font = generator.generateFont(20);
 		generator.dispose();
+
+		Random rand = new Random();
+		int value = rand.nextInt(3);
+		if (value == 0) {
+			music = Gdx.audio.newMusic(Gdx.files.internal("data/ken.mp3"));
+			music.play();
+		} else if (value == 1) {
+			music = Gdx.audio.newMusic(Gdx.files.internal("data/guile.mp3"));
+			music.play();
+		} else {
+			music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
+			music.play();
+		}
 	}
 
 	@Override

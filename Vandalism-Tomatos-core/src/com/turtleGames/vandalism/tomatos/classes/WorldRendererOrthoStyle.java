@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.turtleGames.vandalism.tomatos.Tomatos;
@@ -21,6 +24,7 @@ public class WorldRendererOrthoStyle {
 	OrthographicCamera orthoBackgroundCam;
 	SpriteBatch spriteBatcher;
 	ModelBatch modelBatcher;
+	ShapeRenderer shapeRenderer;
 
 	public WorldRendererOrthoStyle(SpriteBatch spriteBatcher,
 			ModelBatch modelBatcher, WorldOrthoStyle world, Tomatos game) {
@@ -28,6 +32,7 @@ public class WorldRendererOrthoStyle {
 		this.world = world;
 		this.spriteBatcher = spriteBatcher;
 		this.modelBatcher = modelBatcher;
+		shapeRenderer = new ShapeRenderer();
 
 		orthoBackgroundCam = new OrthographicCamera(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
@@ -50,6 +55,7 @@ public class WorldRendererOrthoStyle {
 		renderTargets();
 		renderProjectile();
 		renderBushKid();
+		// renderShapes();
 	}
 
 	private void renderBackground() {
@@ -134,6 +140,7 @@ public class WorldRendererOrthoStyle {
 		if (projectile.update) {
 			Vector3 position = projectile.spacePos;
 			Vector2 dimensions = projectile.dimensions;
+			Circle bounds = projectile.bounds;
 			float stateTime = projectile.stateTime;
 
 			if (projectile.getState() == Projectile.FLYING) {
@@ -141,16 +148,32 @@ public class WorldRendererOrthoStyle {
 				TextureRegion textureRegion = animation.getKeyFrame(stateTime,
 						true);
 
-				spriteBatcher.draw(textureRegion,
-						position.x - dimensions.x / 2, position.y
-								- dimensions.y / 2, dimensions.x, dimensions.y);
+				// spriteBatcher.draw(textureRegion,
+				// position.x - dimensions.x / 2, position.y
+				// - dimensions.y / 2, dimensions.x, dimensions.y);
+				spriteBatcher.draw(textureRegion, position.x - bounds.radius
+						* 2 / 2, position.y - bounds.radius * 2 / 2,
+						bounds.radius * 2, bounds.radius * 2);
+			} else if (projectile.getState() == Projectile.HIT) {
+				Texture texture = game.assetManager.get(
+						"data/projectileHit.png", Texture.class);
+
+				// spriteBatcher.draw(texture, position.x - dimensions.x / 2,
+				// position.y - dimensions.y / 2, dimensions.x,
+				// dimensions.y);
+				spriteBatcher.draw(texture, position.x - bounds.radius * 2 / 2,
+						position.y - bounds.radius * 2 / 2, bounds.radius * 2,
+						bounds.radius * 2);
 			} else {
 				Texture texture = game.assetManager.get(
 						"data/projectileHit.png", Texture.class);
 
-				spriteBatcher.draw(texture, position.x - dimensions.x / 2,
-						position.y - dimensions.y / 2, dimensions.x,
-						dimensions.y);
+				// spriteBatcher.draw(texture, position.x - dimensions.x / 2,
+				// position.y - dimensions.y / 2, dimensions.x,
+				// dimensions.y);
+				spriteBatcher.draw(texture, position.x - bounds.radius * 2 / 2,
+						position.y - bounds.radius * 2 / 2, bounds.radius * 2,
+						bounds.radius * 2);
 			}
 		}
 
@@ -168,5 +191,21 @@ public class WorldRendererOrthoStyle {
 				(Texture) world.game.assetManager.get("data/kid6464.png"),
 				Gdx.graphics.getWidth() / 2 - 25, 0, 64, 64);
 		spriteBatcher.end();
+	}
+
+	private void renderShapes() {
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(1, 0, 0, 1);
+
+		Circle circle = world.projectile.bounds;
+		shapeRenderer.circle(circle.x, circle.y, circle.radius);
+
+		for (int i = 0; i < world.targets.size; i++) {
+			Target target = world.targets.get(i);
+			Rectangle rect = target.bounds;
+			shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		}
+
+		shapeRenderer.end();
 	}
 }

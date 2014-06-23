@@ -1,7 +1,7 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.turtleGames.vandalism.tomatos.Tomatos;
@@ -62,7 +62,7 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateTargets() {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 9; i++) {
 			Target target = new Target(game);
 
 			targets.add(target);
@@ -100,8 +100,8 @@ public class WorldOrthoStyle {
 		updateImpactSetter(delta);
 		updateProjectile(delta);
 		updateTargets(delta);
-		updateCamera();
-		checkCollitions();
+		// updateCamera();
+		checkCollisions();
 		checkTargetsState();
 	}
 
@@ -119,36 +119,39 @@ public class WorldOrthoStyle {
 	}
 
 	private void updateCamera() {
-		// if (projectile.state == Projectile.FLYING) {
-		// worldRenderer.orthoTargetsCam.zoom -= 0.01f;
-		// worldRenderer.orthoTargetsCam.position.y += 0.5f;
-		// } else if (projectile.state == Projectile.HIT
-		// || projectile.state == Projectile.GROUND) {
-		//
-		// } else if (projectile.stateTime >= 0) {
-		// worldRenderer.orthoTargetsCam.zoom += 0.01f;
-		// worldRenderer.orthoTargetsCam.position.y -= 0.5f;
-		// } else {
-		// worldRenderer.orthoTargetsCam.zoom = 1;
-		// worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() /
-		// 2;
-		// }
+		if (projectile.state == Projectile.FLYING) {
+			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
+			worldRenderer.orthoTargetsCam.position.y += 0.5f;
+		} else if (projectile.state == Projectile.HIT
+				|| projectile.state == Projectile.GROUND) {
+
+		} else if (projectile.stateTime >= 0) {
+			worldRenderer.orthoTargetsCam.zoom += 0.01f;
+			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
+		} else {
+			worldRenderer.orthoTargetsCam.zoom = 1;
+			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
+		}
 	}
 
-	private void checkCollitions() {
+	private void checkCollisions() {
 		if (impactSetter.isShooting()
 				&& projectile.stateTime >= projectile.flyghtTime / 2
 				&& projectile.state == Projectile.FLYING) {
 			for (int i = 0; i < targets.size; i++) {
 				Target target = targets.get(i);
-				if (target.spacePos.z <= projectile.spacePos.z + 8
-						&& target.spacePos.z >= projectile.spacePos.z - 8)
-					if (Intersector.overlaps(projectile.bounds, target.bounds))
-						if (target.spacePos.z <= projectile.spacePos.z + 32
-								&& target.spacePos.z >= projectile.spacePos.z - 32) {
-							target.setState(Target.HIT);
-							projectile.setState(Projectile.HIT);
-						}
+
+				if (target.spacePos.z > projectile.impactSpot.x)
+					continue;
+
+				if (target.spacePos.z + target.bounds.width > projectile.spacePos.z
+						+ projectile.bounds.radius
+						&& target.spacePos.z - target.bounds.width < projectile.spacePos.z
+						&& target.bounds.contains(projectile.spacePos.x,
+								projectile.spacePos.y)) {
+					target.setState(Target.HIT);
+					projectile.setState(Projectile.HIT);
+				}
 			}
 		}
 	}
