@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
@@ -25,6 +23,8 @@ public class WorldRendererOrthoStyle {
 	SpriteBatch spriteBatcher;
 	ModelBatch modelBatcher;
 	ShapeRenderer shapeRenderer;
+
+	private int sideX;
 
 	public WorldRendererOrthoStyle(SpriteBatch spriteBatcher,
 			ModelBatch modelBatcher, WorldOrthoStyle world, Tomatos game) {
@@ -77,56 +77,51 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
 
+		TextureRegion textureReg = null;
+		Texture texture = null;
+
 		for (Target target : world.targets) {
+
+			sideX = target.velocity.x < 0 ? -1 : 1;
+
 			if (target.getState() == Target.WALKING) {
 				/* getAnimation(type, dimensions); */
 				Animation animation = game.assets.getAnimation(target.type);
-				TextureRegion texture = animation.getKeyFrame(target.stateTime,
-						true);
-
-				spriteBatcher.draw(texture, target.spacePos.x,
-						target.spacePos.y, target.dimensions.x,
-						target.dimensions.y);
+				textureReg = animation.getKeyFrame(target.stateTime, true);
+				texture = null;
 			} else if (target.getState() == Target.HIT) {
-				Texture texture = null;
-
+				textureReg = null;
 				switch (target.type) {
 					case Target.TARGET1:
 						texture = game.assetManager.get("data/target1Hit.png",
 								Texture.class);
-
-						spriteBatcher.draw(texture, target.spacePos.x,
-								target.spacePos.y, target.dimensions.x,
-								target.dimensions.y);
 						break;
 					case Target.TARGET2:
 						texture = game.assetManager.get("data/target2Hit.png",
 								Texture.class);
-
-						spriteBatcher.draw(texture, target.spacePos.x,
-								target.spacePos.y, target.dimensions.x,
-								target.dimensions.y);
 						break;
 					case Target.DOG:
 						texture = game.assetManager.get("data/dogHit.png",
 								Texture.class);
-
-						spriteBatcher.draw(texture, target.spacePos.x,
-								target.spacePos.y, target.dimensions.x,
-								target.dimensions.y);
 						break;
 					case Target.CAT:
 						texture = game.assetManager.get("data/catHit.png",
 								Texture.class);
-
-						spriteBatcher.draw(texture, target.spacePos.x,
-								target.spacePos.y, target.dimensions.x,
-								target.dimensions.y);
 						break;
 				}
 			} else {
 
 			}
+
+			if (textureReg == null)
+				spriteBatcher.draw(texture, target.spacePos.x,
+						target.spacePos.y, target.dimensions.x * sideX,
+						target.dimensions.y);
+			else
+				spriteBatcher.draw(textureReg, target.spacePos.x,
+						target.spacePos.y, target.dimensions.x * sideX,
+						target.dimensions.y);
+
 		}
 		spriteBatcher.end();
 	}
@@ -139,7 +134,6 @@ public class WorldRendererOrthoStyle {
 		Projectile projectile = world.projectile;
 		if (projectile.update) {
 			Vector3 position = projectile.spacePos;
-			Vector2 dimensions = projectile.dimensions;
 			Circle bounds = projectile.bounds;
 			float stateTime = projectile.stateTime;
 
@@ -193,19 +187,19 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.end();
 	}
 
-	private void renderShapes() {
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.setColor(1, 0, 0, 1);
-
-		Circle circle = world.projectile.bounds;
-		shapeRenderer.circle(circle.x, circle.y, circle.radius);
-
-		for (int i = 0; i < world.targets.size; i++) {
-			Target target = world.targets.get(i);
-			Rectangle rect = target.bounds;
-			shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-		}
-
-		shapeRenderer.end();
-	}
+	// private void renderShapes() {
+	// shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+	// shapeRenderer.setColor(1, 0, 0, 1);
+	//
+	// Circle circle = world.projectile.bounds;
+	// shapeRenderer.circle(circle.x, circle.y, circle.radius);
+	//
+	// for (int i = 0; i < world.targets.size; i++) {
+	// Target target = world.targets.get(i);
+	// Rectangle rect = target.bounds;
+	// shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+	// }
+	//
+	// shapeRenderer.end();
+	// }
 }

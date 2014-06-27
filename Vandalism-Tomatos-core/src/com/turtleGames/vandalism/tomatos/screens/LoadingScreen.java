@@ -90,6 +90,11 @@ public class LoadingScreen implements Screen {
 		game.assetManager.load("data/dogAnim.pack", TextureAtlas.class);
 		game.assetManager.load("data/cat.pack", TextureAtlas.class);
 		game.assetManager.load("data/projectile.pack", TextureAtlas.class);
+		game.assetManager.load("data/title.png", Texture.class);
+		game.assetManager.load("data/play.png", Texture.class);
+		game.assetManager.load("data/help.png", Texture.class);
+		game.assetManager.load("data/highscore.png", Texture.class);
+		game.assetManager.load("data/quit.png", Texture.class);
 
 		game.assetManager.finishLoading();
 
@@ -168,7 +173,7 @@ public class LoadingScreen implements Screen {
 			// screen is touched after the
 			// game is done loading, go to the
 			// main menu screen
-			game.setScreen(new GameScreenOrthoStyle(game));
+			game.setScreen(new MainMenuScreen(game));
 			// }
 		}
 

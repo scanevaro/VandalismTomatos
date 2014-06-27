@@ -15,7 +15,7 @@ import com.turtleGames.vandalism.tomatos.classes.WorldSimpsonsStyle.WorldListene
 import com.turtleGames.vandalism.tomatos.classes.WorldSimpsonsStyle.WorldState;
 import com.turtleGames.vandalism.tomatos.classes.WorldRendererSimpsonsStyle;
 
-public class GameScreenSimpsonsStyle implements Screen {
+public class GameSimpsonsStyleScreen implements Screen {
 
 	private enum GameState {
 		READY, RUNNING, GAME_OVER
@@ -33,7 +33,7 @@ public class GameScreenSimpsonsStyle implements Screen {
 
 	BitmapFont font;
 
-	public GameScreenSimpsonsStyle(Tomatos game) {
+	public GameSimpsonsStyleScreen(Tomatos game) {
 		this.game = game;
 
 		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(),

@@ -18,7 +18,7 @@ import com.turtleGames.vandalism.tomatos.classes.WorldRendererOrthoStyle;
 import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
 
-public class GameScreenOrthoStyle implements Screen {
+public class GameOrthoStyleScreen implements Screen {
 
 	private enum GameState {
 		READY, RUNNING, GAME_OVER
@@ -39,7 +39,7 @@ public class GameScreenOrthoStyle implements Screen {
 	Music music;
 
 	@SuppressWarnings("deprecation")
-	public GameScreenOrthoStyle(Tomatos game) {
+	public GameOrthoStyleScreen(Tomatos game) {
 		this.game = game;
 
 		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(),
