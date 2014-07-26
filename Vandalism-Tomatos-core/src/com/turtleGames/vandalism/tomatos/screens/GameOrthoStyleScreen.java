@@ -1,7 +1,5 @@
 package com.turtleGames.vandalism.tomatos.screens;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -80,18 +78,18 @@ public class GameOrthoStyleScreen implements Screen {
 		font = generator.generateFont(20);
 		generator.dispose();
 
-		Random rand = new Random();
-		int value = rand.nextInt(3);
-		if (value == 0) {
-			music = Gdx.audio.newMusic(Gdx.files.internal("data/ken.mp3"));
-			music.play();
-		} else if (value == 1) {
-			music = Gdx.audio.newMusic(Gdx.files.internal("data/guile.mp3"));
-			music.play();
-		} else {
-			music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
-			music.play();
-		}
+//		Random rand = new Random();
+//		int value = rand.nextInt(3);
+//		if (value == 0) {
+//			music = Gdx.audio.newMusic(Gdx.files.internal("data/ken.mp3"));
+//			music.play();
+//		} else if (value == 1) {
+//			music = Gdx.audio.newMusic(Gdx.files.internal("data/guile.mp3"));
+//			music.play();
+//		} else {
+//			music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
+//			music.play();
+//		}
 	}
 
 	@Override

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos/Vandalism-Tomatos.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos/Vandalism-Tomatos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos-android/Vandalism-Tomatos-android.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos-android/Vandalism-Tomatos-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos-core/Vandalism-Tomatos-core.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos-core/Vandalism-Tomatos-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos-desktop/Vandalism-Tomatos-desktop.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos-desktop/Vandalism-Tomatos-desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos-html/Vandalism-Tomatos-html.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos-html/Vandalism-Tomatos-html.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Vandalism-Tomatos-ios/Vandalism-Tomatos-ios.iml" filepath="$PROJECT_DIR$/Vandalism-Tomatos-ios/Vandalism-Tomatos-ios.iml" />
+    </modules>
+  </component>
+</project>
+

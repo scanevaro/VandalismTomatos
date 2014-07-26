@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.turtleGames.vandalism.tomatos.Tomatos;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
@@ -55,7 +56,7 @@ public class WorldRendererOrthoStyle {
 		renderTargets();
 		renderProjectile();
 		renderBushKid();
-		// renderShapes();
+		renderShapes();
 	}
 
 	private void renderBackground() {
@@ -108,19 +109,34 @@ public class WorldRendererOrthoStyle {
 						texture = game.assetManager.get("data/catHit.png",
 								Texture.class);
 						break;
+					case Target.PIXEL_TARGET_1:
+						texture = game.assetManager.get(
+								"data/pixelTarget1Hit.png", Texture.class);
+						break;
 				}
 			} else {
 
 			}
 
-			if (textureReg == null)
-				spriteBatcher.draw(texture, target.spacePos.x,
-						target.spacePos.y, target.dimensions.x * sideX,
-						target.dimensions.y);
-			else
-				spriteBatcher.draw(textureReg, target.spacePos.x,
-						target.spacePos.y, target.dimensions.x * sideX,
-						target.dimensions.y);
+			if (sideX == 1) {
+				if (textureReg == null)
+					spriteBatcher.draw(texture, target.spacePos.x,
+							target.spacePos.y, target.dimensions.x,
+							target.dimensions.y);
+				else
+					spriteBatcher.draw(textureReg, target.spacePos.x,
+							target.spacePos.y, target.dimensions.x,
+							target.dimensions.y);
+			} else {
+				if (textureReg == null)
+					spriteBatcher.draw(texture, target.spacePos.x
+							+ target.bounds.width, target.spacePos.y,
+							target.dimensions.x * sideX, target.dimensions.y);
+				else
+					spriteBatcher.draw(textureReg, target.spacePos.x
+							+ target.bounds.width, target.spacePos.y,
+							target.dimensions.x * sideX, target.dimensions.y);
+			}
 
 		}
 		spriteBatcher.end();
@@ -136,39 +152,31 @@ public class WorldRendererOrthoStyle {
 			Vector3 position = projectile.spacePos;
 			Circle bounds = projectile.bounds;
 			float stateTime = projectile.stateTime;
+			TextureRegion textureReg = null;
+			Texture texture = null;
 
 			if (projectile.getState() == Projectile.FLYING) {
-				Animation animation = game.assets.projectileAnimation;
-				TextureRegion textureRegion = animation.getKeyFrame(stateTime,
-						true);
-
-				// spriteBatcher.draw(textureRegion,
-				// position.x - dimensions.x / 2, position.y
-				// - dimensions.y / 2, dimensions.x, dimensions.y);
-				spriteBatcher.draw(textureRegion, position.x - bounds.radius
-						* 2 / 2, position.y - bounds.radius * 2 / 2,
-						bounds.radius * 2, bounds.radius * 2);
+				Animation animation = game.assets.projectileAnim;
+				textureReg = animation.getKeyFrame(stateTime, true);
 			} else if (projectile.getState() == Projectile.HIT) {
-				Texture texture = game.assetManager.get(
-						"data/projectileHit.png", Texture.class);
-
-				// spriteBatcher.draw(texture, position.x - dimensions.x / 2,
-				// position.y - dimensions.y / 2, dimensions.x,
-				// dimensions.y);
-				spriteBatcher.draw(texture, position.x - bounds.radius * 2 / 2,
-						position.y - bounds.radius * 2 / 2, bounds.radius * 2,
-						bounds.radius * 2);
+				texture = game.assetManager.get("data/projectileHit.png",
+						Texture.class);
+				textureReg = null;
 			} else {
-				Texture texture = game.assetManager.get(
-						"data/projectileHit.png", Texture.class);
+				texture = game.assetManager.get("data/projectileHit.png",
+						Texture.class);
+				textureReg = null;
+			}
 
-				// spriteBatcher.draw(texture, position.x - dimensions.x / 2,
-				// position.y - dimensions.y / 2, dimensions.x,
-				// dimensions.y);
+			if (textureReg == null)
 				spriteBatcher.draw(texture, position.x - bounds.radius * 2 / 2,
 						position.y - bounds.radius * 2 / 2, bounds.radius * 2,
 						bounds.radius * 2);
-			}
+			else
+				spriteBatcher.draw(textureReg, position.x - bounds.radius * 2
+						/ 2, position.y - bounds.radius * 2 / 2,
+						bounds.radius * 2, bounds.radius * 2);
+
 		}
 
 		spriteBatcher.end();
@@ -187,19 +195,26 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.end();
 	}
 
-	// private void renderShapes() {
-	// shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-	// shapeRenderer.setColor(1, 0, 0, 1);
-	//
-	// Circle circle = world.projectile.bounds;
-	// shapeRenderer.circle(circle.x, circle.y, circle.radius);
-	//
-	// for (int i = 0; i < world.targets.size; i++) {
-	// Target target = world.targets.get(i);
-	// Rectangle rect = target.bounds;
-	// shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-	// }
-	//
-	// shapeRenderer.end();
-	// }
+	private void renderShapes() {
+		shapeRenderer.setProjectionMatrix(orthoTargetsCam.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(1, 0, 0, 1);
+
+		Circle circle = world.projectile.bounds;
+		shapeRenderer.circle(circle.x, circle.y, circle.radius);
+
+		for (int i = 0; i < world.targets.size; i++) {
+			Target target = world.targets.get(i);
+			sideX = target.velocity.x < 0 ? -1 : 1;
+			Rectangle rect = target.bounds;
+
+			if (sideX == -1)
+				shapeRenderer.rect(rect.x + rect.width, rect.y, rect.width
+						* sideX, rect.height);
+			else
+				shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		}
+
+		shapeRenderer.end();
+	}
 }

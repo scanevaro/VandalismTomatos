@@ -13,6 +13,7 @@ public class Target extends Dynamic3DGameObject {
 	public static final int TARGET2 = 1;
 	public static final int DOG = 2;
 	public static final int CAT = 3;
+	public static final int PIXEL_TARGET_1 = 4;
 
 	public static final int WALKING = 0;
 	public static final int HIT = 1;
@@ -35,7 +36,7 @@ public class Target extends Dynamic3DGameObject {
 			rand = new Random();
 
 		stateTime = 0;
-		type = rand.nextInt(4);
+		type = 4;// rand.nextInt(5);
 		setState(WALKING);
 
 		instantiate();
@@ -45,10 +46,9 @@ public class Target extends Dynamic3DGameObject {
 		if (rand == null)
 			rand = new Random();
 
-		setVelocity();
 		setSpacePos();
+		setVelocity();
 		setDimensions();
-		setZ();
 		setBounds();
 	}
 
@@ -78,6 +78,12 @@ public class Target extends Dynamic3DGameObject {
 				else
 					velocity.set(-43, 0);
 				break;
+			case PIXEL_TARGET_1:
+				if (spacePos.x <= 0)
+					velocity.set(43, 0);
+				else
+					velocity.set(-43, 0);
+				break;
 		}
 	}
 
@@ -85,10 +91,10 @@ public class Target extends Dynamic3DGameObject {
 		float x = 0, y = 0;
 
 		y = rand.nextFloat();
-		while (y > 0.75f && y < 0.25f)
+		while (y > 0.6f || y < 0.4f)
 			y = rand.nextFloat();
 
-		y = y * Gdx.graphics.getHeight() * 0.8f;
+		y = y * Gdx.graphics.getHeight();
 
 		if (spacePos.x == 0) {
 			if (rand.nextInt(2) == 0)
@@ -131,27 +137,21 @@ public class Target extends Dynamic3DGameObject {
 				width = texture.getRegionWidth();
 				height = texture.getRegionHeight();
 				break;
-		}
-	}
+			case PIXEL_TARGET_1:
+				texture = game.assets.getAnimation(PIXEL_TARGET_1).getKeyFrame(
+						0);
 
-	private void setZ() {
-		if (spacePos.y < Gdx.graphics.getHeight() * 0.25f)
-			dimensions.set(width, height);
-		else if (spacePos.y > Gdx.graphics.getHeight() * 0.25f
-				&& spacePos.y < Gdx.graphics.getHeight() * 0.5f) {
-			width = width / 2;
-			height = height / 2;
-			dimensions.set(width, height);
-		} else if (spacePos.y > Gdx.graphics.getHeight() * 0.5f
-				&& spacePos.y < Gdx.graphics.getHeight() * 0.75f) {
-			width = width / 3;
-			height = height / 3;
-			dimensions.set(width, height);
-		} else {
-			width = width / 4;
-			height = height / 4;
-			dimensions.set(width, height);
+				width = texture.getRegionWidth();
+				height = texture.getRegionHeight();
+				break;
 		}
+
+		float dimensionPercentage = 1 - ((spacePos.y - (Gdx.graphics
+				.getHeight() * 0.4f)) / ((Gdx.graphics.getHeight() * 0.6f) - (Gdx.graphics
+				.getHeight() * 0.35f)));
+		width = width * dimensionPercentage;
+		height = height * dimensionPercentage;
+		dimensions.set(width, height);
 	}
 
 	private void setBounds() {

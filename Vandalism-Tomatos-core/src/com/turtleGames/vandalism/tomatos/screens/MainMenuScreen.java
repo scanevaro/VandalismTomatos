@@ -30,6 +30,8 @@ public class MainMenuScreen implements Screen {
 	Texture titleTex;
 	Background background;
 
+	Texture pixelTarget2;
+
 	int state;
 
 	public MainMenuScreen(Tomatos game) {
@@ -41,7 +43,7 @@ public class MainMenuScreen implements Screen {
 				Gdx.graphics.getHeight() / 2, 0);
 
 		background = new Background(0, 0,
-				(Texture) game.assetManager.get("data/background.png"));
+				(Texture) game.assetManager.get("data/backgroundPixel.png"));
 
 		titleTex = game.assetManager.get("data/title.png", Texture.class);
 		playButtonTex = game.assetManager.get("data/play.png", Texture.class);
@@ -66,6 +68,9 @@ public class MainMenuScreen implements Screen {
 
 		touchPoint = new Vector3();
 		spriteBatcher = new SpriteBatch();
+
+		pixelTarget2 = game.assetManager.get("data/pixelTarget2Hit.png",
+				Texture.class);
 	}
 
 	@Override

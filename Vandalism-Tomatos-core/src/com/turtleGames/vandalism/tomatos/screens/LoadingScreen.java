@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -75,21 +76,36 @@ public class LoadingScreen implements Screen {
 		stage.addActor(logo);
 
 		// Add everything to be loaded, for instance:
-		game.assetManager.load("data/kid50.png", Texture.class);
+		// projectile
 		game.assetManager.load("data/projectile.png", Texture.class);
-		game.assetManager.load("data/kid6464.png", Texture.class);
-		game.assetManager.load("data/background.png", Texture.class);
-		game.assetManager.load("data/bush.png", Texture.class);
-		game.assetManager.load("data/target1Hit.png", Texture.class);
-		game.assetManager.load("data/target2Hit.png", Texture.class);
-		game.assetManager.load("data/catHit.png", Texture.class);
-		game.assetManager.load("data/dogHit.png", Texture.class);
 		game.assetManager.load("data/projectileHit.png", Texture.class);
-		game.assetManager.load("data/targetAnimation.pack", TextureAtlas.class);
-		game.assetManager.load("data/target2.pack", TextureAtlas.class);
-		game.assetManager.load("data/dogAnim.pack", TextureAtlas.class);
-		game.assetManager.load("data/cat.pack", TextureAtlas.class);
 		game.assetManager.load("data/projectile.pack", TextureAtlas.class);
+
+		// entities
+		game.assetManager.load("data/entities/pixelKid.png", Texture.class);
+		game.assetManager.load("data/entities/catHit.png", Texture.class);
+		game.assetManager.load("data/entities/pixelCat0.png", Texture.class);
+		game.assetManager.load("data/entities/pixelCat1.png", Texture.class);
+		game.assetManager.load("data/entities/dogHit.png", Texture.class);
+		game.assetManager.load("data/entities/pixelDog0.png", Texture.class);
+		game.assetManager.load("data/entities/pixelDog1.png", Texture.class);
+		game.assetManager.load("data/entities/girlHit.png", Texture.class);
+		game.assetManager.load("data/entities/pixelGirl0.png", Texture.class);
+		game.assetManager.load("data/entities/pixelGirl1.png", Texture.class);
+		game.assetManager.load("data/entities/pixelTarget2Hit.png",
+				Texture.class);
+		game.assetManager
+				.load("data/entities/pixelTarget20.png", Texture.class);
+		game.assetManager
+				.load("data/entities/pixelTarget21.png", Texture.class);
+		game.assetManager.load("data/entities/copHit.png", Texture.class);
+		game.assetManager.load("data/entities/pixelCop0.png", Texture.class);
+		game.assetManager.load("data/entities/pixelCop1.png", Texture.class);
+
+		// background
+		game.assetManager.load("data/backgroundPixel.png", Texture.class);
+
+		// main menu
 		game.assetManager.load("data/title.png", Texture.class);
 		game.assetManager.load("data/play.png", Texture.class);
 		game.assetManager.load("data/help.png", Texture.class);
@@ -98,29 +114,39 @@ public class LoadingScreen implements Screen {
 
 		game.assetManager.finishLoading();
 
-		TextureAtlas targetAnimAtlas = game.assetManager.get(
-				"data/targetAnimation.pack", TextureAtlas.class);
-		game.assets.targetAnimation = new Animation(0.25f,
-				targetAnimAtlas.getRegions());
+		// create animations
+		game.assets.girlAnim = new Animation(0.25f, new TextureRegion(
+				game.assetManager.get("data/entities/pixelGirl0.png",
+						Texture.class)), new TextureRegion(
+				game.assetManager.get("data/entities/pixelGirl1.png",
+						Texture.class)));
 
-		TextureAtlas target2AnimAtlas = game.assetManager.get(
-				"data/target2.pack", TextureAtlas.class);
-		game.assets.target2Animation = new Animation(0.25f,
-				target2AnimAtlas.getRegions());
+		game.assets.target2Anim = new Animation(0.25f, game.assetManager.get(
+				"data/entities/pixelTarget20.png", TextureRegion.class),
+				game.assetManager.get("data/entities/pixelTarget21.png",
+						TextureRegion.class));
 
-		TextureAtlas dogAnimAtlas = game.assetManager.get("data/dogAnim.pack",
-				TextureAtlas.class);
-		game.assets.dogAnimation = new Animation(0.25f,
-				dogAnimAtlas.getRegions());
+		game.assets.copAnim = new Animation(0.25f, game.assetManager.get(
+				"data/entities/pixelCop1.png", TextureRegion.class),
+				game.assetManager.get("data/entities/pixelCop1.png",
+						TextureRegion.class));
 
-		TextureAtlas catAnimAtlas = game.assetManager.get("data/cat.pack",
-				TextureAtlas.class);
-		game.assets.catAnimation = new Animation(0.25f,
-				catAnimAtlas.getRegions());
+		game.assets.dogAnim = new Animation(0.25f, game.assetManager.get(
+				"data/entities/pixelDog0.png", TextureRegion.class),
+				game.assetManager.get("data/entities/pixelDog1.png",
+						TextureRegion.class));
+
+		game.assets.catAnim = new Animation(0.25f, game.assetManager.get(
+				"data/entities/pixelCat0.png", TextureRegion.class),
+				game.assetManager.get("data/entities/pixelCat1.png",
+						TextureRegion.class));
+
+		game.assets.girlAnim = new Animation(0.15f, game.assetManager.get(
+				"data/target2.pack", TextureRegion.class));
 
 		TextureAtlas projectileAnimAtlas = game.assetManager.get(
 				"data/projectile.pack", TextureAtlas.class);
-		game.assets.projectileAnimation = new Animation(0.15f,
+		game.assets.projectileAnim = new Animation(0.15f,
 				projectileAnimAtlas.getRegions());
 	}
 

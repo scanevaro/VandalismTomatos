@@ -5,21 +5,25 @@ import com.turtleGames.vandalism.tomatos.entities.Target;
 
 public class Assets {
 	public Animation targetAnimation;
-	public Animation target2Animation;
-	public Animation dogAnimation;
-	public Animation catAnimation;
-	public Animation projectileAnimation;
+	public Animation target2Anim;
+	public Animation dogAnim;
+	public Animation catAnim;
+	public Animation projectileAnim;
+	public Animation girlAnim;
+	public Animation copAnim;
 
 	public Animation getAnimation(int type) {
 		switch (type) {
 			case Target.TARGET1:
 				return targetAnimation;
 			case Target.TARGET2:
-				return target2Animation;
+				return target2Anim;
 			case Target.DOG:
-				return dogAnimation;
+				return dogAnim;
 			case Target.CAT:
-				return catAnimation;
+				return catAnim;
+			case Target.PIXEL_TARGET_1:
+				return girlAnim;
 			default:
 				return null;
 		}

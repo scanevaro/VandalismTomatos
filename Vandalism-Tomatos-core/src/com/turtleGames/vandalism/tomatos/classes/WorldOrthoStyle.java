@@ -1,6 +1,5 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -54,7 +53,7 @@ public class WorldOrthoStyle {
 
 	private void initiateBackground() {
 		background = new Background(0, 0,
-				(Texture) game.assetManager.get("data/background.png"));
+				(Texture) game.assetManager.get("data/backgroundPixel.png"));
 	}
 
 	private void initiateTargetsArray() {
@@ -118,21 +117,21 @@ public class WorldOrthoStyle {
 			targets.get(i).update(delta);
 	}
 
-	private void updateCamera() {
-		if (projectile.state == Projectile.FLYING) {
-			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
-			worldRenderer.orthoTargetsCam.position.y += 0.5f;
-		} else if (projectile.state == Projectile.HIT
-				|| projectile.state == Projectile.GROUND) {
-
-		} else if (projectile.stateTime >= 0) {
-			worldRenderer.orthoTargetsCam.zoom += 0.01f;
-			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
-		} else {
-			worldRenderer.orthoTargetsCam.zoom = 1;
-			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
-		}
-	}
+	// private void updateCamera() {
+	// if (projectile.state == Projectile.FLYING) {
+	// worldRenderer.orthoTargetsCam.zoom -= 0.01f;
+	// worldRenderer.orthoTargetsCam.position.y += 0.5f;
+	// } else if (projectile.state == Projectile.HIT
+	// || projectile.state == Projectile.GROUND) {
+	//
+	// } else if (projectile.stateTime >= 0) {
+	// worldRenderer.orthoTargetsCam.zoom += 0.01f;
+	// worldRenderer.orthoTargetsCam.position.y -= 0.5f;
+	// } else {
+	// worldRenderer.orthoTargetsCam.zoom = 1;
+	// worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
+	// }
+	// }
 
 	private void checkCollisions() {
 		if (impactSetter.isShooting()
