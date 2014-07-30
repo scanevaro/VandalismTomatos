@@ -69,7 +69,7 @@ public class MainMenuScreen implements Screen {
 		touchPoint = new Vector3();
 		spriteBatcher = new SpriteBatch();
 
-		pixelTarget2 = game.assetManager.get("data/pixelTarget2Hit.png",
+		pixelTarget2 = game.assetManager.get("data/entities/pixelTarget2Hit.png",
 				Texture.class);
 	}
 

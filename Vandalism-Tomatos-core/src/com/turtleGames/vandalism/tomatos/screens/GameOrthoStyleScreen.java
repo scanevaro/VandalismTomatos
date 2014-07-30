@@ -18,13 +18,14 @@ import com.turtleGames.vandalism.tomatos.entities.Projectile;
 
 public class GameOrthoStyleScreen implements Screen {
 
-	private enum GameState {
+	public enum GameState {
 		READY, RUNNING, GAME_OVER
 	}
 
 	Tomatos game;
 
-	int state;
+	private int state;
+	public int level;
 	OrthographicCamera guiCam;
 	SpriteBatch spriteBatcher;
 	ModelBatch modelBatcher;
@@ -35,6 +36,10 @@ public class GameOrthoStyleScreen implements Screen {
 	BitmapFont font;
 
 	Music music;
+
+	private String gameOver = "Game Over";
+	private String score = "Score 000000";
+	private String touch = "Touch to continue";
 
 	@SuppressWarnings("deprecation")
 	public GameOrthoStyleScreen(Tomatos game) {
@@ -66,30 +71,31 @@ public class GameOrthoStyleScreen implements Screen {
 
 			}
 		};
-		world = new WorldOrthoStyle(game, worldListener);
+		world = new WorldOrthoStyle(game, worldListener, level);
 		worldRenderer = new WorldRendererOrthoStyle(spriteBatcher,
 				modelBatcher, world, game);
 		world.worldRenderer = worldRenderer;
 
-		state = GameState.READY.ordinal();
+		// setState(GameState.READY.ordinal());
+		setState(GameState.GAME_OVER.ordinal());
 
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("data/wonder.ttf"));
 		font = generator.generateFont(20);
 		generator.dispose();
 
-//		Random rand = new Random();
-//		int value = rand.nextInt(3);
-//		if (value == 0) {
-//			music = Gdx.audio.newMusic(Gdx.files.internal("data/ken.mp3"));
-//			music.play();
-//		} else if (value == 1) {
-//			music = Gdx.audio.newMusic(Gdx.files.internal("data/guile.mp3"));
-//			music.play();
-//		} else {
-//			music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
-//			music.play();
-//		}
+		// Random rand = new Random();
+		// int value = rand.nextInt(3);
+		// if (value == 0) {
+		// music = Gdx.audio.newMusic(Gdx.files.internal("data/ken.mp3"));
+		// music.play();
+		// } else if (value == 1) {
+		// music = Gdx.audio.newMusic(Gdx.files.internal("data/guile.mp3"));
+		// music.play();
+		// } else {
+		// music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
+		// music.play();
+		// }
 	}
 
 	@Override
@@ -102,15 +108,17 @@ public class GameOrthoStyleScreen implements Screen {
 		// if (deltaTime > 0.1f)
 		// deltaTime = 0.1f;
 
-		if (state == GameState.READY.ordinal()) {
+		if (getState() == GameState.READY.ordinal())
 			updateReady(delta);
-		} else if (state == GameState.RUNNING.ordinal()) {
+		else if (getState() == GameState.RUNNING.ordinal())
 			updateRunning(delta);
-		} else if (state == GameState.GAME_OVER.ordinal()) {
+		else if (getState() == GameState.GAME_OVER.ordinal())
 			updateGameOver(delta);
-		}
 
 		world.update(delta);
+
+		if (world.state == GameState.GAME_OVER.ordinal())
+			setState(GameState.GAME_OVER.ordinal());
 	}
 
 	private void updateReady(float delta) {
@@ -118,8 +126,7 @@ public class GameOrthoStyleScreen implements Screen {
 			// guiCam.unproject(touchPoint.set(Gdx.input.getX(),
 			// Gdx.input.getY(),
 			// 0));
-			state = GameState.RUNNING.ordinal();
-			world.state = WorldOrthoStyle.RUNNING;
+			setState(GameState.RUNNING.ordinal());
 		}
 	}
 
@@ -144,7 +151,8 @@ public class GameOrthoStyleScreen implements Screen {
 	}
 
 	private void updateGameOver(float delta) {
-
+		if (Gdx.input.justTouched())
+			game.setScreen(new MainMenuScreen(game));
 	}
 
 	public void draw() {
@@ -162,13 +170,12 @@ public class GameOrthoStyleScreen implements Screen {
 
 		presentUI();
 
-		if (state == GameState.READY.ordinal()) {
+		if (getState() == GameState.READY.ordinal())
 			presentReady();
-		} else if (state == GameState.RUNNING.ordinal()) {
+		else if (getState() == GameState.RUNNING.ordinal())
 			presentRunning();
-		} else if (state == GameState.GAME_OVER.ordinal()) {
+		else if (getState() == GameState.GAME_OVER.ordinal())
 			presentGameOver();
-		}
 
 		spriteBatcher.end();
 	}
@@ -190,6 +197,29 @@ public class GameOrthoStyleScreen implements Screen {
 	}
 
 	private void presentGameOver() {
+		font.setColor(Color.RED);
+		font.setScale(3.0f, 3.0f);
+		font.draw(
+				spriteBatcher,
+				gameOver,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* gameOver.length(),
+				(Gdx.graphics.getHeight() / 2) + (Gdx.graphics.getHeight() / 4)
+						+ ((Gdx.graphics.getHeight() / 4) / 2));
+		font.setScale(2.8f, 2.8f);
+		font.draw(
+				spriteBatcher,
+				score,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* score.length(), Gdx.graphics.getHeight() / 2
+						+ ((Gdx.graphics.getHeight() / 4) / 2));
+		font.setColor(Color.BLUE);
+		font.setScale(2.0f, 2.0f);
+		font.draw(
+				spriteBatcher,
+				touch,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* (touch.length() - 2), Gdx.graphics.getHeight() / 3);
 	}
 
 	@Override
@@ -226,5 +256,15 @@ public class GameOrthoStyleScreen implements Screen {
 		spriteBatcher.dispose();
 		modelBatcher.dispose();
 		world.dispose();
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+
+		world.state = state;
 	}
 }

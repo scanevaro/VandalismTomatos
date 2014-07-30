@@ -8,12 +8,9 @@ import com.turtleGames.vandalism.tomatos.entities.Background;
 import com.turtleGames.vandalism.tomatos.entities.ImpactSetter;
 import com.turtleGames.vandalism.tomatos.entities.Projectile;
 import com.turtleGames.vandalism.tomatos.entities.Target;
+import com.turtleGames.vandalism.tomatos.screens.GameOrthoStyleScreen.GameState;
 
 public class WorldOrthoStyle {
-
-	public final static int READY = 0;
-	public final static int RUNNING = 1;
-	public final static int GAME_OVER = 2;
 
 	public interface WorldListener {
 		public void hitTarget();
@@ -34,13 +31,16 @@ public class WorldOrthoStyle {
 	public final WorldListener listener;
 	Vector3 touchPoint;
 	public int state;
+	private int level;
 
 	Array<Target> targets;
+	private int hit;
 
-	public WorldOrthoStyle(Tomatos game, WorldListener listener) {
+	public WorldOrthoStyle(Tomatos game, WorldListener listener, int level) {
 		this.game = game;
 		this.listener = listener;
 		this.touchPoint = new Vector3();
+		this.level = level;
 
 		initiateBackground();
 		initiateTargetsArray();
@@ -48,7 +48,8 @@ public class WorldOrthoStyle {
 		initiateImpactSetter();
 		initiateProjectile();
 
-		state = READY;
+		setHit(0);
+		state = GameState.READY.ordinal();
 	}
 
 	private void initiateBackground() {
@@ -78,17 +79,12 @@ public class WorldOrthoStyle {
 
 	public void update(float deltaTime) {
 
-		switch (state) {
-			case READY:
-				updateReady(deltaTime);
-				break;
-			case RUNNING:
-				updateRunning(deltaTime);
-				break;
-			case GAME_OVER:
-				updateGameOver();
-				break;
-		}
+		if (state == GameState.READY.ordinal())
+			updateReady(deltaTime);
+		else if (state == GameState.RUNNING.ordinal())
+			updateRunning(deltaTime);
+		else if (state == GameState.GAME_OVER.ordinal())
+			updateGameOver();
 	}
 
 	private void updateReady(float deltaTime) {
@@ -150,6 +146,10 @@ public class WorldOrthoStyle {
 								projectile.spacePos.y)) {
 					target.setState(Target.HIT);
 					projectile.setState(Projectile.HIT);
+					setHit(hit + 1);
+
+					if (target.type == Target.COP)
+						state = GameState.GAME_OVER.ordinal();
 				}
 			}
 		}
@@ -167,10 +167,21 @@ public class WorldOrthoStyle {
 	}
 
 	private void updateGameOver() {
-
+		// TODO
 	}
 
 	public void dispose() {
 		impactSetter.dispose();
+	}
+
+	public int getHit() {
+		return hit;
+	}
+
+	public void setHit(int hit) {
+		this.hit = hit;
+
+		if (hit == 1)
+			targets.add(new Target(game, 4));
 	}
 }

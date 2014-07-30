@@ -14,8 +14,6 @@ public class Assets {
 
 	public Animation getAnimation(int type) {
 		switch (type) {
-			case Target.TARGET1:
-				return targetAnimation;
 			case Target.TARGET2:
 				return target2Anim;
 			case Target.DOG:
@@ -24,6 +22,8 @@ public class Assets {
 				return catAnim;
 			case Target.PIXEL_TARGET_1:
 				return girlAnim;
+			case Target.COP:
+				return copAnim;
 			default:
 				return null;
 		}

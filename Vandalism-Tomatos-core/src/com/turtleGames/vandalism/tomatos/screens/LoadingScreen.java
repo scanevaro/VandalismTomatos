@@ -104,6 +104,7 @@ public class LoadingScreen implements Screen {
 
 		// background
 		game.assetManager.load("data/backgroundPixel.png", Texture.class);
+		game.assetManager.load("data/pixelBush.png", Texture.class);
 
 		// main menu
 		game.assetManager.load("data/title.png", Texture.class);
@@ -121,28 +122,29 @@ public class LoadingScreen implements Screen {
 				game.assetManager.get("data/entities/pixelGirl1.png",
 						Texture.class)));
 
-		game.assets.target2Anim = new Animation(0.25f, game.assetManager.get(
-				"data/entities/pixelTarget20.png", TextureRegion.class),
+		game.assets.target2Anim = new Animation(0.25f, new TextureRegion(
+				game.assetManager.get("data/entities/pixelTarget20.png",
+						Texture.class)), new TextureRegion(
 				game.assetManager.get("data/entities/pixelTarget21.png",
-						TextureRegion.class));
+						Texture.class)));
 
-		game.assets.copAnim = new Animation(0.25f, game.assetManager.get(
-				"data/entities/pixelCop1.png", TextureRegion.class),
+		game.assets.copAnim = new Animation(0.25f, new TextureRegion(
+				game.assetManager.get("data/entities/pixelCop0.png",
+						Texture.class)), new TextureRegion(
 				game.assetManager.get("data/entities/pixelCop1.png",
-						TextureRegion.class));
+						Texture.class)));
 
-		game.assets.dogAnim = new Animation(0.25f, game.assetManager.get(
-				"data/entities/pixelDog0.png", TextureRegion.class),
+		game.assets.dogAnim = new Animation(0.25f, new TextureRegion(
+				game.assetManager.get("data/entities/pixelDog0.png",
+						Texture.class)), new TextureRegion(
 				game.assetManager.get("data/entities/pixelDog1.png",
-						TextureRegion.class));
+						Texture.class)));
 
-		game.assets.catAnim = new Animation(0.25f, game.assetManager.get(
-				"data/entities/pixelCat0.png", TextureRegion.class),
+		game.assets.catAnim = new Animation(0.25f, new TextureRegion(
+				game.assetManager.get("data/entities/pixelCat0.png",
+						Texture.class)), new TextureRegion(
 				game.assetManager.get("data/entities/pixelCat1.png",
-						TextureRegion.class));
-
-		game.assets.girlAnim = new Animation(0.15f, game.assetManager.get(
-				"data/target2.pack", TextureRegion.class));
+						Texture.class)));
 
 		TextureAtlas projectileAnimAtlas = game.assetManager.get(
 				"data/projectile.pack", TextureAtlas.class);

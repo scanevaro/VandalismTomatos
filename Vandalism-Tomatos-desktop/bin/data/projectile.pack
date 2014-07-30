@@ -1,0 +1,89 @@
+
+projectile.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+3
+  rotate: false
+  xy: 1, 52
+  size: 64, 75
+  orig: 64, 75
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 67, 53
+  size: 64, 74
+  orig: 64, 74
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 133, 55
+  size: 64, 72
+  orig: 64, 72
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 199, 55
+  size: 64, 72
+  orig: 64, 72
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 265, 59
+  size: 64, 68
+  orig: 64, 68
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 265, 1
+  size: 64, 56
+  orig: 64, 56
+  offset: 0, 0
+  index: -1
+9
+  rotate: false
+  xy: 331, 59
+  size: 64, 68
+  orig: 64, 68
+  offset: 0, 0
+  index: -1
+6
+  rotate: false
+  xy: 331, 1
+  size: 64, 56
+  orig: 64, 56
+  offset: 0, 0
+  index: -1
+8
+  rotate: false
+  xy: 397, 69
+  size: 64, 58
+  orig: 64, 58
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 397, 10
+  size: 64, 57
+  orig: 64, 57
+  offset: 0, 0
+  index: -1
+7
+  rotate: false
+  xy: 463, 70
+  size: 64, 57
+  orig: 64, 57
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 463, 12
+  size: 63, 56
+  orig: 63, 56
+  offset: 0, 0
+  index: -1

@@ -93,25 +93,26 @@ public class WorldRendererOrthoStyle {
 			} else if (target.getState() == Target.HIT) {
 				textureReg = null;
 				switch (target.type) {
-					case Target.TARGET1:
-						texture = game.assetManager.get("data/target1Hit.png",
-								Texture.class);
-						break;
 					case Target.TARGET2:
-						texture = game.assetManager.get("data/target2Hit.png",
+						texture = game.assetManager.get(
+								"data/entities/pixelTarget2Hit.png",
 								Texture.class);
 						break;
 					case Target.DOG:
-						texture = game.assetManager.get("data/dogHit.png",
-								Texture.class);
+						texture = game.assetManager.get(
+								"data/entities/dogHit.png", Texture.class);
 						break;
 					case Target.CAT:
-						texture = game.assetManager.get("data/catHit.png",
-								Texture.class);
+						texture = game.assetManager.get(
+								"data/entities/catHit.png", Texture.class);
 						break;
 					case Target.PIXEL_TARGET_1:
 						texture = game.assetManager.get(
-								"data/pixelTarget1Hit.png", Texture.class);
+								"data/entities/girlHit.png", Texture.class);
+						break;
+					case Target.COP:
+						texture = game.assetManager.get(
+								"data/entities/copHit.png", Texture.class);
 						break;
 				}
 			} else {
@@ -186,11 +187,14 @@ public class WorldRendererOrthoStyle {
 		spriteBatcher.setProjectionMatrix(orthoTargetsCam.combined);
 		spriteBatcher.enableBlending();
 		spriteBatcher.begin();
-		spriteBatcher.draw(
-				(Texture) world.game.assetManager.get("data/bush.png"), 0, 0,
-				Gdx.graphics.getWidth(), 200);
-		spriteBatcher.draw(
-				(Texture) world.game.assetManager.get("data/kid6464.png"),
+
+		Texture texture = (Texture) world.game.assetManager
+				.get("data/pixelBush.png");
+
+		spriteBatcher.draw(texture,
+				Gdx.graphics.getWidth() / 2 - texture.getWidth(), 0, 128, 128);
+		spriteBatcher.draw((Texture) world.game.assetManager
+				.get("data/entities/pixelKid.png"),
 				Gdx.graphics.getWidth() / 2 - 25, 0, 64, 64);
 		spriteBatcher.end();
 	}

@@ -9,11 +9,11 @@ import com.turtleGames.vandalism.tomatos.classes.Dynamic3DGameObject;
 
 public class Target extends Dynamic3DGameObject {
 
-	public static final int TARGET1 = 0;
-	public static final int TARGET2 = 1;
-	public static final int DOG = 2;
-	public static final int CAT = 3;
-	public static final int PIXEL_TARGET_1 = 4;
+	public static final int TARGET2 = 0;
+	public static final int DOG = 1;
+	public static final int CAT = 2;
+	public static final int PIXEL_TARGET_1 = 3;
+	public static final int COP = 4;
 
 	public static final int WALKING = 0;
 	public static final int HIT = 1;
@@ -36,7 +36,23 @@ public class Target extends Dynamic3DGameObject {
 			rand = new Random();
 
 		stateTime = 0;
-		type = 4;// rand.nextInt(5);
+		type = rand.nextInt(4);
+		setState(WALKING);
+
+		instantiate();
+	}
+
+	public Target(Tomatos game, int type) {
+		super();
+
+		this.game = game;
+		this.type = type;
+
+		if (rand == null)
+			rand = new Random();
+
+		stateTime = 0;
+
 		setState(WALKING);
 
 		instantiate();
@@ -54,12 +70,6 @@ public class Target extends Dynamic3DGameObject {
 
 	private void setVelocity() {
 		switch (type) {
-			case TARGET1:
-				if (spacePos.x <= 0)
-					velocity.set(30, 0);
-				else
-					velocity.set(-30, 0);
-				break;
 			case TARGET2:
 				if (spacePos.x <= 0)
 					velocity.set(25, 0);
@@ -79,6 +89,12 @@ public class Target extends Dynamic3DGameObject {
 					velocity.set(-43, 0);
 				break;
 			case PIXEL_TARGET_1:
+				if (spacePos.x <= 0)
+					velocity.set(43, 0);
+				else
+					velocity.set(-43, 0);
+				break;
+			case COP:
 				if (spacePos.x <= 0)
 					velocity.set(43, 0);
 				else
@@ -112,39 +128,39 @@ public class Target extends Dynamic3DGameObject {
 
 	private void setDimensions() {
 		TextureRegion texture;
-		switch (type) {
-			case TARGET1:
-				texture = game.assets.getAnimation(TARGET1).getKeyFrame(0);
+		// switch (type) {
+		// case TARGET2:
+		// texture = game.assets.getAnimation(type).getKeyFrame(0);
+		//
+		// width = texture.getRegionWidth();
+		// height = texture.getRegionHeight();
+		// break;
+		// case DOG:
+		// texture = game.assets.getAnimation(DOG).getKeyFrame(0);
+		//
+		// width = texture.getRegionWidth();
+		// height = texture.getRegionHeight();
+		// break;
+		// case CAT:
+		// texture = game.assets.getAnimation(CAT).getKeyFrame(0);
+		//
+		// width = texture.getRegionWidth();
+		// height = texture.getRegionHeight();
+		// break;
+		// case PIXEL_TARGET_1:
+		// texture = game.assets.getAnimation(PIXEL_TARGET_1).getKeyFrame(
+		// 0);
+		//
+		// width = texture.getRegionWidth();
+		// height = texture.getRegionHeight();
+		// break;
+		// case COP:
+		texture = game.assets.getAnimation(type).getKeyFrame(0);
 
-				width = texture.getRegionWidth();
-				height = texture.getRegionHeight();
-				break;
-			case TARGET2:
-				texture = game.assets.getAnimation(TARGET2).getKeyFrame(0);
-
-				width = texture.getRegionWidth();
-				height = texture.getRegionHeight();
-				break;
-			case DOG:
-				texture = game.assets.getAnimation(DOG).getKeyFrame(0);
-
-				width = texture.getRegionWidth();
-				height = texture.getRegionHeight();
-				break;
-			case CAT:
-				texture = game.assets.getAnimation(CAT).getKeyFrame(0);
-
-				width = texture.getRegionWidth();
-				height = texture.getRegionHeight();
-				break;
-			case PIXEL_TARGET_1:
-				texture = game.assets.getAnimation(PIXEL_TARGET_1).getKeyFrame(
-						0);
-
-				width = texture.getRegionWidth();
-				height = texture.getRegionHeight();
-				break;
-		}
+		width = texture.getRegionWidth();
+		height = texture.getRegionHeight();
+		// break;
+		// }
 
 		float dimensionPercentage = 1 - ((spacePos.y - (Gdx.graphics
 				.getHeight() * 0.4f)) / ((Gdx.graphics.getHeight() * 0.6f) - (Gdx.graphics
