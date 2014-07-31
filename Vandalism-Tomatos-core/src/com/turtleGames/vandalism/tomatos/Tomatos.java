@@ -11,6 +11,8 @@ public class Tomatos extends Game {
 	public static FPSLogger fps;
 	public AssetManager assetManager;
 	public Assets assets;
+	public int score;
+	public int level;
 
 	@Override
 	public void create() {

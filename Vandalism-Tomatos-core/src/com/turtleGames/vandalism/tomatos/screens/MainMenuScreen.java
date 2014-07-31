@@ -69,8 +69,8 @@ public class MainMenuScreen implements Screen {
 		touchPoint = new Vector3();
 		spriteBatcher = new SpriteBatch();
 
-		pixelTarget2 = game.assetManager.get("data/entities/pixelTarget2Hit.png",
-				Texture.class);
+		pixelTarget2 = game.assetManager.get(
+				"data/entities/pixelTarget2Hit.png", Texture.class);
 	}
 
 	@Override
@@ -85,6 +85,8 @@ public class MainMenuScreen implements Screen {
 					0));
 
 			if (playBounds.contains(touchPoint.x, touchPoint.y)) {
+				game.score = 0;
+				game.level = 1;
 				game.setScreen(new GameOrthoStyleScreen(game));
 			}
 		}

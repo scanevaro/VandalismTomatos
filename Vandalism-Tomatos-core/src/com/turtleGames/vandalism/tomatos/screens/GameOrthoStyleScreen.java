@@ -25,7 +25,7 @@ public class GameOrthoStyleScreen implements Screen {
 	Tomatos game;
 
 	private int state;
-	public int level;
+
 	OrthographicCamera guiCam;
 	SpriteBatch spriteBatcher;
 	ModelBatch modelBatcher;
@@ -38,7 +38,7 @@ public class GameOrthoStyleScreen implements Screen {
 	Music music;
 
 	private String gameOver = "Game Over";
-	private String score = "Score 000000";
+	private String score = "Score ";
 	private String touch = "Touch to continue";
 
 	@SuppressWarnings("deprecation")
@@ -71,13 +71,10 @@ public class GameOrthoStyleScreen implements Screen {
 
 			}
 		};
-		world = new WorldOrthoStyle(game, worldListener, level);
+		world = new WorldOrthoStyle(game, worldListener);
 		worldRenderer = new WorldRendererOrthoStyle(spriteBatcher,
 				modelBatcher, world, game);
 		world.worldRenderer = worldRenderer;
-
-		// setState(GameState.READY.ordinal());
-		setState(GameState.GAME_OVER.ordinal());
 
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("data/wonder.ttf"));
@@ -96,6 +93,8 @@ public class GameOrthoStyleScreen implements Screen {
 		// music = Gdx.audio.newMusic(Gdx.files.internal("data/ryu.mp3"));
 		// music.play();
 		// }
+
+		setState(GameState.READY.ordinal());
 	}
 
 	@Override
@@ -122,12 +121,8 @@ public class GameOrthoStyleScreen implements Screen {
 	}
 
 	private void updateReady(float delta) {
-		if (Gdx.input.justTouched()) {
-			// guiCam.unproject(touchPoint.set(Gdx.input.getX(),
-			// Gdx.input.getY(),
-			// 0));
+		if (Gdx.input.justTouched())
 			setState(GameState.RUNNING.ordinal());
-		}
 	}
 
 	private void updateRunning(float delta) {
@@ -197,6 +192,8 @@ public class GameOrthoStyleScreen implements Screen {
 	}
 
 	private void presentGameOver() {
+		score = "Score " + String.valueOf(game.score);
+
 		font.setColor(Color.RED);
 		font.setScale(3.0f, 3.0f);
 		font.draw(

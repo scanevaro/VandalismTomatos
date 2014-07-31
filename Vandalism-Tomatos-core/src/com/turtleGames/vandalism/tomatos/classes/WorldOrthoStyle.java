@@ -31,16 +31,14 @@ public class WorldOrthoStyle {
 	public final WorldListener listener;
 	Vector3 touchPoint;
 	public int state;
-	private int level;
 
 	Array<Target> targets;
 	private int hit;
 
-	public WorldOrthoStyle(Tomatos game, WorldListener listener, int level) {
+	public WorldOrthoStyle(Tomatos game, WorldListener listener) {
 		this.game = game;
 		this.listener = listener;
 		this.touchPoint = new Vector3();
-		this.level = level;
 
 		initiateBackground();
 		initiateTargetsArray();
@@ -147,6 +145,7 @@ public class WorldOrthoStyle {
 					target.setState(Target.HIT);
 					projectile.setState(Projectile.HIT);
 					setHit(hit + 1);
+					game.score += 10;
 
 					if (target.type == Target.COP)
 						state = GameState.GAME_OVER.ordinal();
