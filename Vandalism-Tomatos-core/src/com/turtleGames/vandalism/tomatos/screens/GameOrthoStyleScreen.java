@@ -40,6 +40,7 @@ public class GameOrthoStyleScreen implements Screen {
 	private String gameOver = "Game Over";
 	private String score = "Score ";
 	private String touch = "Touch to continue";
+	private String level = "Level ";
 
 	@SuppressWarnings("deprecation")
 	public GameOrthoStyleScreen(Tomatos game) {
@@ -189,6 +190,17 @@ public class GameOrthoStyleScreen implements Screen {
 	}
 
 	private void presentRunning() {
+		score = "Score " + String.valueOf(game.score);
+		level = "Level " + String.valueOf(game.level);
+
+		font.setColor(Color.RED);
+		font.setScale(1.0f, 1.0f);
+		font.draw(spriteBatcher, score, 0, font.getCapHeight());
+		font.draw(
+				spriteBatcher,
+				level,
+				Gdx.graphics.getWidth() - font.getSpaceWidth()
+						* (level.length() * 2), font.getCapHeight());
 	}
 
 	private void presentGameOver() {
