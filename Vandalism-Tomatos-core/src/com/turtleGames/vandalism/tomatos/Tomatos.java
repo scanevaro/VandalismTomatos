@@ -47,4 +47,26 @@ public class Tomatos extends Game {
 	@Override
 	public void resume() {
 	}
+
+	public int getHitsToPolice() {
+		int hitsToPolice = 0;
+
+		if (level == 1)
+			hitsToPolice = 3;
+		if (level == 2)
+			hitsToPolice = 2;
+
+		return hitsToPolice;
+	}
+
+	public int getHitsToWin() {
+		int hitToWin = 0;
+
+		if (level == 1)
+			hitToWin = 6;
+		else if (level == 2)
+			hitToWin = 8;
+
+		return hitToWin;
+	}
 }

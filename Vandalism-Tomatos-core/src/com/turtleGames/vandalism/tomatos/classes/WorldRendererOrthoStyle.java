@@ -56,7 +56,7 @@ public class WorldRendererOrthoStyle {
 		renderTargets();
 		renderProjectile();
 		renderBushKid();
-		renderShapes();
+		// renderShapes();
 	}
 
 	private void renderBackground() {
@@ -119,27 +119,32 @@ public class WorldRendererOrthoStyle {
 
 			}
 
-			if (sideX == 1) {
-				if (textureReg == null)
-					spriteBatcher.draw(texture, target.spacePos.x,
-							target.spacePos.y, target.dimensions.x,
-							target.dimensions.y);
-				else
-					spriteBatcher.draw(textureReg, target.spacePos.x,
-							target.spacePos.y, target.dimensions.x,
-							target.dimensions.y);
-			} else {
-				if (textureReg == null)
-					spriteBatcher.draw(texture, target.spacePos.x
-							+ target.bounds.width, target.spacePos.y,
-							target.dimensions.x * sideX, target.dimensions.y);
-				else
-					spriteBatcher.draw(textureReg, target.spacePos.x
-							+ target.bounds.width, target.spacePos.y,
-							target.dimensions.x * sideX, target.dimensions.y);
+			if (target.getState() != Target.IDLE
+					&& target.getState() != Target.REMOVE) {
+				if (sideX == 1) {
+					if (textureReg == null)
+						spriteBatcher.draw(texture, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+					else
+						spriteBatcher.draw(textureReg, target.spacePos.x,
+								target.spacePos.y, target.dimensions.x,
+								target.dimensions.y);
+				} else {
+					if (textureReg == null)
+						spriteBatcher.draw(texture, target.spacePos.x
+								+ target.bounds.width, target.spacePos.y,
+								target.dimensions.x * sideX,
+								target.dimensions.y);
+					else
+						spriteBatcher.draw(textureReg, target.spacePos.x
+								+ target.bounds.width, target.spacePos.y,
+								target.dimensions.x * sideX,
+								target.dimensions.y);
+				}
 			}
-
 		}
+
 		spriteBatcher.end();
 	}
 
@@ -192,7 +197,8 @@ public class WorldRendererOrthoStyle {
 				.get("data/pixelBush.png");
 
 		spriteBatcher.draw(texture,
-				Gdx.graphics.getWidth() / 2 - texture.getWidth(), 0, 128, 128);
+				Gdx.graphics.getWidth() / 2 - texture.getWidth() / 2, 0,
+				texture.getWidth(), texture.getHeight());
 		spriteBatcher.draw((Texture) world.game.assetManager
 				.get("data/entities/pixelKid.png"),
 				Gdx.graphics.getWidth() / 2 - 25, 0, 64, 64);

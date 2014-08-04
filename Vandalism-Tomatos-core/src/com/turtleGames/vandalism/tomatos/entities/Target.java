@@ -18,6 +18,7 @@ public class Target extends Dynamic3DGameObject {
 	public static final int WALKING = 0;
 	public static final int HIT = 1;
 	public static final int REMOVE = 2;
+	public static final int IDLE = 3;
 
 	private Random rand;
 
@@ -37,7 +38,24 @@ public class Target extends Dynamic3DGameObject {
 
 		stateTime = 0;
 		type = rand.nextInt(4);
-		setState(WALKING);
+
+		if (rand.nextFloat() < 0.1f)
+			setState(WALKING);
+		else
+			setState(IDLE);
+
+		instantiate();
+	}
+
+	public Target(Tomatos game, int state, String type) {
+		super();
+
+		this.game = game;
+
+		if (rand == null)
+			rand = new Random();
+
+		setState(state);
 
 		instantiate();
 	}
@@ -53,7 +71,10 @@ public class Target extends Dynamic3DGameObject {
 
 		stateTime = 0;
 
-		setState(WALKING);
+		if (rand.nextFloat() < 0.1f)
+			setState(WALKING);
+		else
+			setState(IDLE);
 
 		instantiate();
 	}
@@ -127,40 +148,9 @@ public class Target extends Dynamic3DGameObject {
 	}
 
 	private void setDimensions() {
-		TextureRegion texture;
-		// switch (type) {
-		// case TARGET2:
-		// texture = game.assets.getAnimation(type).getKeyFrame(0);
-		//
-		// width = texture.getRegionWidth();
-		// height = texture.getRegionHeight();
-		// break;
-		// case DOG:
-		// texture = game.assets.getAnimation(DOG).getKeyFrame(0);
-		//
-		// width = texture.getRegionWidth();
-		// height = texture.getRegionHeight();
-		// break;
-		// case CAT:
-		// texture = game.assets.getAnimation(CAT).getKeyFrame(0);
-		//
-		// width = texture.getRegionWidth();
-		// height = texture.getRegionHeight();
-		// break;
-		// case PIXEL_TARGET_1:
-		// texture = game.assets.getAnimation(PIXEL_TARGET_1).getKeyFrame(
-		// 0);
-		//
-		// width = texture.getRegionWidth();
-		// height = texture.getRegionHeight();
-		// break;
-		// case COP:
-		texture = game.assets.getAnimation(type).getKeyFrame(0);
-
+		TextureRegion texture = game.assets.getAnimation(type).getKeyFrame(0);
 		width = texture.getRegionWidth();
 		height = texture.getRegionHeight();
-		// break;
-		// }
 
 		float dimensionPercentage = 1 - ((spacePos.y - (Gdx.graphics
 				.getHeight() * 0.4f)) / ((Gdx.graphics.getHeight() * 0.6f) - (Gdx.graphics
@@ -181,13 +171,18 @@ public class Target extends Dynamic3DGameObject {
 				bounds.set(spacePos.x, spacePos.y, width, height);
 
 				if (spacePos.x <= 0 - dimensions.x
-						|| spacePos.x >= Gdx.graphics.getWidth()) {
-					instantiate();
-				}
+						|| spacePos.x >= Gdx.graphics.getWidth())
+					setState(IDLE);
 				break;
 			case HIT:
 				if (stateTime >= 2f)
 					setState(REMOVE);
+				break;
+			case IDLE:
+				if (stateTime > 3f) {
+					setState(WALKING);
+					instantiate();
+				}
 				break;
 		}
 

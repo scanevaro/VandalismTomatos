@@ -19,7 +19,7 @@ import com.turtleGames.vandalism.tomatos.entities.Projectile;
 public class GameOrthoStyleScreen implements Screen {
 
 	public enum GameState {
-		READY, RUNNING, GAME_OVER
+		READY, RUNNING, GAME_OVER, WIN
 	}
 
 	Tomatos game;
@@ -38,6 +38,7 @@ public class GameOrthoStyleScreen implements Screen {
 	Music music;
 
 	private String gameOver = "Game Over";
+	private String win = "Level Complete";
 	private String score = "Score ";
 	private String touch = "Touch to continue";
 	private String level = "Level ";
@@ -113,7 +114,9 @@ public class GameOrthoStyleScreen implements Screen {
 		else if (getState() == GameState.RUNNING.ordinal())
 			updateRunning(delta);
 		else if (getState() == GameState.GAME_OVER.ordinal())
-			updateGameOver(delta);
+			updateGameOver();
+		else if (getState() == GameState.WIN.ordinal())
+			updateWin();
 
 		world.update(delta);
 
@@ -146,9 +149,13 @@ public class GameOrthoStyleScreen implements Screen {
 		}
 	}
 
-	private void updateGameOver(float delta) {
+	private void updateGameOver() {
 		if (Gdx.input.justTouched())
 			game.setScreen(new MainMenuScreen(game));
+	}
+
+	private void updateWin() {
+		// TODO
 	}
 
 	public void draw() {
@@ -172,6 +179,8 @@ public class GameOrthoStyleScreen implements Screen {
 			presentRunning();
 		else if (getState() == GameState.GAME_OVER.ordinal())
 			presentGameOver();
+		else if (getState() == GameState.WIN.ordinal())
+			presentWin();
 
 		spriteBatcher.end();
 	}
@@ -213,6 +222,34 @@ public class GameOrthoStyleScreen implements Screen {
 				gameOver,
 				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
 						* gameOver.length(),
+				(Gdx.graphics.getHeight() / 2) + (Gdx.graphics.getHeight() / 4)
+						+ ((Gdx.graphics.getHeight() / 4) / 2));
+		font.setScale(2.8f, 2.8f);
+		font.draw(
+				spriteBatcher,
+				score,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* score.length(), Gdx.graphics.getHeight() / 2
+						+ ((Gdx.graphics.getHeight() / 4) / 2));
+		font.setColor(Color.BLUE);
+		font.setScale(2.0f, 2.0f);
+		font.draw(
+				spriteBatcher,
+				touch,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* (touch.length() - 2), Gdx.graphics.getHeight() / 3);
+	}
+
+	private void presentWin() {
+		score = "Score " + String.valueOf(game.score);
+
+		font.setColor(Color.RED);
+		font.setScale(3.0f, 3.0f);
+		font.draw(
+				spriteBatcher,
+				win,
+				Gdx.graphics.getWidth() / 2 - font.getSpaceWidth()
+						* win.length(),
 				(Gdx.graphics.getHeight() / 2) + (Gdx.graphics.getHeight() / 4)
 						+ ((Gdx.graphics.getHeight() / 4) / 2));
 		font.setScale(2.8f, 2.8f);

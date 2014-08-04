@@ -1,5 +1,6 @@
 package com.turtleGames.vandalism.tomatos.classes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -60,10 +61,23 @@ public class WorldOrthoStyle {
 	}
 
 	private void initiateTargets() {
-		for (int i = 0; i < 9; i++) {
-			Target target = new Target(game);
 
-			targets.add(target);
+		switch (game.level) {
+			case 1:
+				Target target = new Target(game, Target.WALKING, null);
+				targets.add(target);
+
+				for (int i = 0; i < 5; i++) {
+					target = new Target(game);
+					targets.add(target);
+				}
+				break;
+			case 2:
+				// TODO
+				break;
+			case 3:
+				// TODO
+				break;
 		}
 	}
 
@@ -76,13 +90,14 @@ public class WorldOrthoStyle {
 	}
 
 	public void update(float deltaTime) {
-
 		if (state == GameState.READY.ordinal())
 			updateReady(deltaTime);
 		else if (state == GameState.RUNNING.ordinal())
 			updateRunning(deltaTime);
 		else if (state == GameState.GAME_OVER.ordinal())
 			updateGameOver();
+		else if (state == GameState.WIN.ordinal())
+			updateWin();
 	}
 
 	private void updateReady(float deltaTime) {
@@ -95,6 +110,10 @@ public class WorldOrthoStyle {
 		updateTargets(delta);
 		// updateCamera();
 		checkCollisions();
+
+		if (state == GameState.GAME_OVER.ordinal())
+			return;
+
 		checkTargetsState();
 	}
 
@@ -111,21 +130,21 @@ public class WorldOrthoStyle {
 			targets.get(i).update(delta);
 	}
 
-	// private void updateCamera() {
-	// if (projectile.state == Projectile.FLYING) {
-	// worldRenderer.orthoTargetsCam.zoom -= 0.01f;
-	// worldRenderer.orthoTargetsCam.position.y += 0.5f;
-	// } else if (projectile.state == Projectile.HIT
-	// || projectile.state == Projectile.GROUND) {
-	//
-	// } else if (projectile.stateTime >= 0) {
-	// worldRenderer.orthoTargetsCam.zoom += 0.01f;
-	// worldRenderer.orthoTargetsCam.position.y -= 0.5f;
-	// } else {
-	// worldRenderer.orthoTargetsCam.zoom = 1;
-	// worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
-	// }
-	// }
+	private void updateCamera() {
+		if (projectile.state == Projectile.FLYING) {
+			worldRenderer.orthoTargetsCam.zoom -= 0.01f;
+			worldRenderer.orthoTargetsCam.position.y += 0.5f;
+		} else if (projectile.state == Projectile.HIT
+				|| projectile.state == Projectile.GROUND) {
+
+		} else if (projectile.stateTime >= 0) {
+			worldRenderer.orthoTargetsCam.zoom += 0.01f;
+			worldRenderer.orthoTargetsCam.position.y -= 0.5f;
+		} else {
+			worldRenderer.orthoTargetsCam.zoom = 1;
+			worldRenderer.orthoTargetsCam.position.y = Gdx.graphics.getHeight() / 2;
+		}
+	}
 
 	private void checkCollisions() {
 		if (impactSetter.isShooting()
@@ -141,7 +160,8 @@ public class WorldOrthoStyle {
 						+ projectile.bounds.radius
 						&& target.spacePos.z - target.bounds.width < projectile.spacePos.z
 						&& target.bounds.contains(projectile.spacePos.x,
-								projectile.spacePos.y)) {
+								projectile.spacePos.y)
+						&& target.getState() == Target.WALKING) {
 					target.setState(Target.HIT);
 					projectile.setState(Projectile.HIT);
 					setHit(hit + 1);
@@ -155,17 +175,24 @@ public class WorldOrthoStyle {
 	}
 
 	private void checkTargetsState() {
+		if (hit == game.getHitsToPolice())
+			targets.add(new Target(game, 4));
+		else if (hit == game.getHitsToWin())
+			state = GameState.WIN.ordinal();
+
 		for (int i = 0; i < targets.size; i++) {
 			Target target = targets.get(i);
-			if (target.getState() == Target.REMOVE) {
-				targets.removeIndex(i);
-
-				targets.add(new Target(game));
-			}
+			if (target.type != Target.COP)
+				if (target.getState() == Target.WALKING)
+					return;
 		}
 	}
 
 	private void updateGameOver() {
+		// TODO
+	}
+
+	private void updateWin() {
 		// TODO
 	}
 
@@ -179,8 +206,5 @@ public class WorldOrthoStyle {
 
 	public void setHit(int hit) {
 		this.hit = hit;
-
-		if (hit == 1)
-			targets.add(new Target(game, 4));
 	}
 }
